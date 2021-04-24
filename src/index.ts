@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import contextMenu from 'electron-context-menu';
 
 import { registerHandlers } from "./main/handlers/ipc";
@@ -21,6 +21,12 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 const createWindow = (): void => {
+	const menu = Menu.buildFromTemplate([
+
+	]);
+
+	Menu.setApplicationMenu(menu);
+
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
 		height: 600,
