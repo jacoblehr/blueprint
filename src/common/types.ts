@@ -2,6 +2,7 @@ export type Sharp = any;
 
 export const SharpOperation = {
 	"blur": "blur",
+	"crop": "crop",
 	"flip": "flip",
 	"flop": "flop",
 	"median": "median",
@@ -32,6 +33,13 @@ export type BlurParameters = SharpOperationParameters & {
 	radius?: number;
 }
 
+export type CropParameters = SharpOperationParameters & {
+	left: number;
+	right: number;
+	width: number;
+	height: number;
+}
+
 export type FlipParameters = SharpOperationParameters;
 export type FlopParameters = SharpOperationParameters;
 
@@ -43,14 +51,12 @@ export type NegateParameters = SharpOperationParameters;
 export type NormaliseParameters = SharpOperationParameters;
 
 export type ResizeParameters = SharpOperationParameters & {
-	options?: {
-		width?: number;
-		height?: number;
-		fit?: SharpFit;
-		position?: SharpPosition;
-		gravity?: SharpGravity;
-		strategy?: SharpStrategy;
-	}
+	width?: number;
+	height?: number;
+	fit?: SharpFit;
+	position?: SharpPosition;
+	gravity?: SharpGravity;
+	strategy?: SharpStrategy;
 }
 
 export type RotateParameters = SharpOperationParameters & {

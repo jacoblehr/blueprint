@@ -16,6 +16,10 @@ const OPERATIONS: Array<OperationOption> = [
 		label: "Blur"
 	},
 	{
+		key: "crop",
+		label: "Crop"
+	},
+	{
 		key: "flip",
 		label: "Flip"
 	},

@@ -1,16 +1,17 @@
 import * as React from "react";
 import { 
-	BlurOptions, 
-	FlipOptions, 
-	FlopOptions, 
-	MedianOptions, 
-	NegateOptions, 
-	NormaliseOptions, 
-	ResizeOptions, 
-	RotateOptions, 
-	SharpenOptions, 
-	SharpOption, 
-	SharpOptionKey, 
+	BlurOptions,
+	CropOptions,
+	FlipOptions,
+	FlopOptions,
+	MedianOptions,
+	NegateOptions,
+	NormaliseOptions,
+	ResizeOptions,
+	RotateOptions,
+	SharpenOptions,
+	SharpOption,
+	SharpOptionKey,
 	SharpOptionType 
 } from "../../common/options";
 import { Maybe, SharpOperationKey,  } from "../../common/types";
@@ -29,6 +30,7 @@ export const useOperations = () => {
 	const [operation, setOperation] = React.useState<Maybe<string>>("blur");
 	const [options, setOptions] = React.useState<Options>({
 		blur: getDefaultOptions(BlurOptions),
+		crop: getDefaultOptions(CropOptions),
 		flip: getDefaultOptions(FlipOptions),
 		flop: getDefaultOptions(FlopOptions),
 		median: getDefaultOptions(MedianOptions),

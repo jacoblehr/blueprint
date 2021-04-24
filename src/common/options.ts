@@ -17,7 +17,9 @@ export type SharpOptionKey =
 	| "background"
 	| "fit"
 	| "height"
+	| "left"
 	| "radius"
+	| "right"
 	| "size"
 	| "width";
 
@@ -29,11 +31,14 @@ export const AngleOption = { key: "angle", label: "Angle", type: "number" as Sha
 export const BackgroundColorOption = { key: "background", label: "Background Color", type: "string" as SharpOptionType, defaultValue: "#000000" };
 export const FitOption = { key: "fit", label: "Fit", type: "string" as SharpOptionType, options: ["cover", "contain", "fill", "inside", "outside"], defaultValue: "cover" };
 export const HeightOption = { key: "height", label: "Height", type: "number" as SharpOptionType };
+export const LeftOption = { key: "left", label: "Left", type: "number" as SharpOptionType, default: 0 };
 export const RadiusOption = { key: "radius", label: "Radius", type: "number" as SharpOptionType, defaultValue: 5 };
+export const RightOption = { key: "left", label: "Left", type: "number" as SharpOptionType, default: 0 };
 export const SizeOption = { key: "size", label: "Size", type: "number" as SharpOptionType, defaultValue: 3 };
 export const WidthOption = { key: "width", label: "Width", type: "number" as SharpOptionType };
 
 export const BlurOptions: Array<SharpOption> = [ RadiusOption ];
+export const CropOptions: Array<SharpOption> = [ LeftOption, RightOption, WidthOption, HeightOption ];
 export const FlipOptions: Array<SharpOption> = [ ];
 export const FlopOptions: Array<SharpOption> = [ ];
 export const MedianOptions: Array<SharpOption> = [ SizeOption ];
@@ -45,6 +50,7 @@ export const SharpenOptions: Array<SharpOption> = [ RadiusOption ];
 
 export const SharpOperationOptions: { [key in SharpOperationKey]: Array<SharpOption> } = {
 	"blur": BlurOptions,
+	"crop": CropOptions,
 	"flip": FlipOptions,
 	"flop": FlopOptions,
 	"median": MedianOptions,

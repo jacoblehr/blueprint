@@ -2,6 +2,7 @@ const sharp = require("sharp");
 
 import { 
 	BlurParameters, 
+	CropParameters, 
 	Maybe, 
 	MedianParameters, 
 	ResizeParameters, 
@@ -57,6 +58,11 @@ export const transform = async (parameters: SharpOperationParameters): Promise<T
 
 			result = await input.blur(getSigma(blurParams.radius));
 			break;
+		case "crop":
+			const cropParams = parameters as CropParameters;
+
+			result = await input.extract({ ...cropParams });
+			break;
 		case "flip":
 			result = await input.flip();
 			break;
@@ -75,7 +81,8 @@ export const transform = async (parameters: SharpOperationParameters): Promise<T
 			break;
 		case "resize":
 			const resizeParams = parameters as ResizeParameters;
-			result = await input.resize(resizeParams.options);
+
+			result = await input.resize({ ...resizeParams });
 			break;
 		case "rotate":
 			const rotateParams = parameters as RotateParameters;
