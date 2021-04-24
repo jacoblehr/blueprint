@@ -16,8 +16,20 @@ const OPERATIONS: Array<OperationOption> = [
 		label: "Blur"
 	},
 	{
-		key: "sharpen",
-		label: "Sharpen"
+		key: "flip",
+		label: "Flip"
+	},
+	{
+		key: "flop",
+		label: "Flop"
+	},
+	{
+		key: "median",
+		label: "Median"
+	},
+	{
+		key: "negate",
+		label: "Negate"
 	},
 	{
 		key: "normalise",
@@ -26,7 +38,15 @@ const OPERATIONS: Array<OperationOption> = [
 	{
 		key: "resize",
 		label: "Resize"
-	}
+	},
+	{
+		key: "rotate",
+		label: "Rotate"
+	},
+	{
+		key: "sharpen",
+		label: "Sharpen"
+	},
 ];
 
 export const ControlPanel = () => {

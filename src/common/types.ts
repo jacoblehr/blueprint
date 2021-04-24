@@ -1,10 +1,15 @@
 export type Sharp = any;
 
 export const SharpOperation = {
-	"resize": "resize",
 	"blur": "blur",
-	"sharpen": "sharpen",
-	"normalise": "normalise"
+	"flip": "flip",
+	"flop": "flop",
+	"median": "median",
+	"negate": "negate",
+	"normalise": "normalise",
+	"resize": "resize",
+	"rotate": "rotate",
+	"sharpen": "sharpen"
 }
 
 export type SharpOperationKey = keyof typeof SharpOperation;
@@ -19,12 +24,23 @@ export type SharpOperationParameters = {
 }
 
 export type SharpFit = "cover" | "contain" | "fill" | "inside" | "outside";
-
 export type SharpPosition = "top" | "right top" | "right" | "right bottom" | "bottom" | "left bottom" | "left" | "left top";
-
 export type SharpGravity = "north" | "northeast" | "east" | "southeast" | "south" | "southwest" | "west" | "northwest" | "center" | "centre";
-
 export type SharpStrategy = "entropy" | "attention";
+
+export type BlurParameters = SharpOperationParameters & {
+	radius?: number;
+}
+
+export type FlipParameters = SharpOperationParameters;
+export type FlopParameters = SharpOperationParameters;
+
+export type MedianParameters = SharpOperationParameters & {
+	size?: number;
+}
+
+export type NegateParameters = SharpOperationParameters;
+export type NormaliseParameters = SharpOperationParameters;
 
 export type ResizeParameters = SharpOperationParameters & {
 	options?: {
@@ -37,8 +53,9 @@ export type ResizeParameters = SharpOperationParameters & {
 	}
 }
 
-export type BlurParameters = SharpOperationParameters & {
-	radius?: number;
+export type RotateParameters = SharpOperationParameters & {
+	angle?: number;
+	background?: string;
 }
 
 export type SharpenParameters = SharpOperationParameters & {
@@ -46,8 +63,6 @@ export type SharpenParameters = SharpOperationParameters & {
 	flat?: number;
 	jagged?: number;
 }
-
-export type NormaliseParameters = SharpOperationParameters;
 
 export type SharpOperationOutput = {
 	file?: string;

@@ -3,7 +3,9 @@ const sharp = require("sharp");
 import { 
 	BlurParameters, 
 	Maybe, 
+	MedianParameters, 
 	ResizeParameters, 
+	RotateParameters, 
 	Sharp, 
 	SharpenParameters,
 	SharpOperationParameters, 
@@ -55,22 +57,39 @@ export const transform = async (parameters: SharpOperationParameters): Promise<T
 
 			result = await input.blur(getSigma(blurParams.radius));
 			break;
+		case "flip":
+			result = await input.flip();
+			break;
+		case "flop":
+			result = await input.flop();
+		case "median":
+			const medianParams = parameters as MedianParameters;
+
+			result = await input.median(medianParams.size);
+			break;
+		case "negate":
+			result = await input.negate();
+			break;
+		case "normalise":
+			result = await input.normalise();
+			break;
+		case "resize":
+			const resizeParams = parameters as ResizeParameters;
+			result = await input.resize(resizeParams.options);
+			break;
+		case "rotate":
+			const rotateParams = parameters as RotateParameters;
+
+			result = await input.rotate(rotateParams.angle, { background: rotateParams.background });
+			break;
 		case "sharpen":
 			const sharpenParams = parameters as SharpenParameters;
 			const { flat, jagged } = sharpenParams;
 
 			result = await input.sharpen(getSigma(sharpenParams.radius), flat, jagged);
 			break;
-		case "resize":
-			const resizeParams = parameters as ResizeParameters;
-			result = await input.resize(resizeParams.options);
-			break;
-		case "normalise":
-			result = await input.normalise();
-			break;
 		default:
-			result = await input[operation]({...rest});
-			break;
+			throw new Error(`Unsupported operation: ${operation}`);
 	}
 
 	const metadata = await input.metadata();

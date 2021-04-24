@@ -1,7 +1,19 @@
 import * as React from "react";
-import { BlurOptions, NormaliseOptions, ResizeOptions, SharpenOptions, SharpOption, SharpOptionKey, SharpOptionType } from "../../common/options";
+import { 
+	BlurOptions, 
+	FlipOptions, 
+	FlopOptions, 
+	MedianOptions, 
+	NegateOptions, 
+	NormaliseOptions, 
+	ResizeOptions, 
+	RotateOptions, 
+	SharpenOptions, 
+	SharpOption, 
+	SharpOptionKey, 
+	SharpOptionType 
+} from "../../common/options";
 import { Maybe, SharpOperationKey,  } from "../../common/types";
-import { SharpOptionValues } from "../../common/options";
 
 export type Options = {
 	[key in SharpOperationKey]: any;
@@ -16,10 +28,15 @@ type SetOptionValueArgs = {
 export const useOperations = () => {
 	const [operation, setOperation] = React.useState<Maybe<string>>("blur");
 	const [options, setOptions] = React.useState<Options>({
-		resize: getDefaultOptions(ResizeOptions),
 		blur: getDefaultOptions(BlurOptions),
-		sharpen: getDefaultOptions(SharpenOptions),
-		normalise: getDefaultOptions(NormaliseOptions)
+		flip: getDefaultOptions(FlipOptions),
+		flop: getDefaultOptions(FlopOptions),
+		median: getDefaultOptions(MedianOptions),
+		negate: getDefaultOptions(NegateOptions),
+		normalise: getDefaultOptions(NormaliseOptions),
+		resize: getDefaultOptions(ResizeOptions),
+		rotate: getDefaultOptions(RotateOptions),
+		sharpen: getDefaultOptions(SharpenOptions)
 	});
 
 	const setOptionValue = ({ operation, option, value }: SetOptionValueArgs) => {
