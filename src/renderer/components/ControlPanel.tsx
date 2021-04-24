@@ -99,6 +99,15 @@ export const ControlPanel = () => {
 		});
 	};
 
+	const handleDiscard = () => {
+		const currentTab = tabs.data[tabs.active];
+
+		tabs.update(tabs.active, {
+			...currentTab,
+			preview: null
+		});
+	}
+
 	const actionsDisabled = tabs.active === -1 || !tabs.data[tabs.active];
 
 	return (
@@ -141,11 +150,20 @@ export const ControlPanel = () => {
 				<Heading mb="0.6rem" size="sm">Actions</Heading>
 				<Flex flex="1" alignItems="flex-end">
 					<Button
+						colorScheme="blue"
+						mr="0.5rem"
 						size="sm"
 						isDisabled={actionsDisabled}
 						onClick={() => handleVips(operation as SharpOperationKey)}
 					>
 						Apply
+					</Button>
+					<Button
+						size="sm"
+						isDisabled={actionsDisabled || !tabs.data[tabs.active].preview}
+						onClick={handleDiscard}
+					>
+						Discard
 					</Button>
 				</Flex>
 			</Flex>
