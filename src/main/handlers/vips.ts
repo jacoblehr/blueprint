@@ -68,6 +68,10 @@ export const transform = async (parameters: SharpOperationParameters): Promise<T
 			break;
 		case "flop":
 			result = await input.flop();
+			break;
+		case "grayscale":
+			result = await input.grayscale();
+			break;
 		case "median":
 			const medianParams = parameters as MedianParameters;
 

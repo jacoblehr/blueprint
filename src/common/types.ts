@@ -5,6 +5,7 @@ export const SharpOperation = {
 	"crop": "crop",
 	"flip": "flip",
 	"flop": "flop",
+	"grayscale": "grayscale",
 	"median": "median",
 	"negate": "negate",
 	"normalise": "normalise",
@@ -42,6 +43,7 @@ export type CropParameters = SharpOperationParameters & {
 
 export type FlipParameters = SharpOperationParameters;
 export type FlopParameters = SharpOperationParameters;
+export type GrayscaleParameters = SharpOperationParameters;
 
 export type MedianParameters = SharpOperationParameters & {
 	size?: number;

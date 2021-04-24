@@ -28,6 +28,10 @@ const OPERATIONS: Array<OperationOption> = [
 		label: "Flop"
 	},
 	{
+		key: "grayscale",
+		label: "Grayscale"
+	},
+	{
 		key: "median",
 		label: "Median"
 	},

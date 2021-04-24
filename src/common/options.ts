@@ -41,6 +41,7 @@ export const BlurOptions: Array<SharpOption> = [ RadiusOption ];
 export const CropOptions: Array<SharpOption> = [ LeftOption, RightOption, WidthOption, HeightOption ];
 export const FlipOptions: Array<SharpOption> = [ ];
 export const FlopOptions: Array<SharpOption> = [ ];
+export const GrayscaleOptions: Array<SharpOption> = [ ];
 export const MedianOptions: Array<SharpOption> = [ SizeOption ];
 export const NegateOptions: Array<SharpOption> = [ ];
 export const NormaliseOptions: Array<SharpOption> = [ ];
@@ -53,6 +54,7 @@ export const SharpOperationOptions: { [key in SharpOperationKey]: Array<SharpOpt
 	"crop": CropOptions,
 	"flip": FlipOptions,
 	"flop": FlopOptions,
+	"grayscale": GrayscaleOptions,
 	"median": MedianOptions,
 	"negate": NegateOptions,
 	"normalise": NormaliseOptions,
