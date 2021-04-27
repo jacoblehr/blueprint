@@ -62,6 +62,12 @@ export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
 		}
 
 		setData(updatedData);
+		updateImage(target.key, {
+			key: target.key,
+			file: target.file,
+			image: target.image,
+			preview: null
+		});
 	};
 
 	const update = (index: number, tab: Tab) => {

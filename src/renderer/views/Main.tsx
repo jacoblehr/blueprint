@@ -2,7 +2,7 @@ import * as React from "react";
 import { Flex, Image, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react"
 import { useAppContext } from "../context/AppContextProvider";
 import { CloseIcon } from "@chakra-ui/icons";
-import { getDataURL, getFileURL } from "../util/string";
+import { getDataURL } from "../util/string";
 import { ControlPanel } from "../components/ControlPanel";
 
 type MainProps = {
