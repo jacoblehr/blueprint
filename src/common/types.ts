@@ -77,6 +77,7 @@ export type SharpOperationOutput = {
 	preview?: string;
 	raw?: Sharp;
 	format: string;
+	metadata: any;
 }
 
 export type Maybe<T> = T | null;
@@ -93,5 +94,14 @@ export type FileOperationArgs = {
 export type FileOperationResult = {
 	file: Maybe<string>;
 	data: string;
-	metadata?: FileMetaData
+	metadata?: ImageMetadata;
 }
+
+export type ImageFormat = "png" | "jpeg" | "gif";
+
+export type ImageMetadata = { 
+	format: ImageFormat;
+	width: number;
+	height: number;
+	size: number;
+};

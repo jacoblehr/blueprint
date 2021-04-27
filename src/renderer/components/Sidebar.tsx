@@ -37,8 +37,7 @@ export const Sidebar = ({  }: SideBarProps) => {
 			tabs.add({
 				key: result.file,
 				file: result.file,
-				data: result.data,
-				metadata: result.metadata,
+				image: { data: result.data, metadata: result.metadata },
 				title: pathTokens[pathTokens.length - 1]
 			});
 		}
@@ -49,7 +48,7 @@ export const Sidebar = ({  }: SideBarProps) => {
 		const activeImage = images?.data.find((img: Image) => img.key === activeTab.key);
 
 		if(activeImage) {
-			const result = await saveImage({ data: activeImage.preview ?? activeImage.data });
+			const result = await saveImage({ data: activeImage.preview.data ?? activeImage.image.data });
 
 			if(!!result.file) {
 				const pathTokens = result.file.split("/");
@@ -57,8 +56,10 @@ export const Sidebar = ({  }: SideBarProps) => {
 					...activeTab,
 					key: result.file,
 					file: result.file,
-					data: result.data,
-					metadata: result.metadata,
+					image: {
+						data: result.data,
+						metadata: result.metadata
+					},
 					preview: null,
 					title: pathTokens[pathTokens.length - 1]
 				});
@@ -73,9 +74,12 @@ export const Sidebar = ({  }: SideBarProps) => {
 		tabs.add({
 			key: img.key,
 			file: img.file,
-			data: img.data,
-			metadata: img.metadata,
-			title: pathTokens[pathTokens.length - 1]
+			image: {
+				data: img.image.data,
+				metadata: img.image.metadata
+			},
+			title: pathTokens[pathTokens.length - 1],
+			preview: null
 		});
 	};
 

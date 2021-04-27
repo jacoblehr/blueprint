@@ -45,7 +45,7 @@ type TransformResult = {
 	raw: Buffer;
 	file: Maybe<string>;
 	preview: Maybe<string>;
-	format: any;	
+	metadata: any;
 }
 
 export const transform = async (parameters: SharpOperationParameters): Promise<TransformResult> => {
@@ -103,14 +103,13 @@ export const transform = async (parameters: SharpOperationParameters): Promise<T
 			throw new Error(`Unsupported operation: ${operation}`);
 	}
 
-	const metadata = await input.metadata();
-	const buffer = await result.toBuffer();
+	const { data: buffer, info: metadata } = await result.toBuffer({ resolveWithObject: true });
 
 	const transformOutput: TransformResult = { 
 		raw: buffer, 
 		file: null, 
 		preview: null, 
-		format: metadata.format 
+		metadata
 	};
 
 	if(isPreview) {

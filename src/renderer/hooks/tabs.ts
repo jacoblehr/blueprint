@@ -1,14 +1,13 @@
 import * as React from "react";
 
-import { Image } from "./images";
+import { Image, ImageView } from "./images";
 
 export type Tab = {
 	key: string;
 	title?: string;
 	file?: string;
-	data?: string;
-	preview?: string;
-	metadata?: { format: string };
+	image?: ImageView;
+	preview?: ImageView;
 };
 
 export type UseTabsArgs = {
@@ -35,9 +34,8 @@ export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
 			addImage({
 				key: tab.key,
 				file: tab.file,
-				data: tab.data,
-				preview: tab.preview,
-				metadata: tab.metadata
+				image: tab.image,
+				preview: tab.preview
 			});
 		}
 
@@ -78,9 +76,8 @@ export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
 		updateImage(oldKey, {
 			key: tab.key,
 			file: tab.file,
-			data: tab.data,
-			preview: tab.preview,
-			metadata: tab.metadata 
+			image: tab.image,
+			preview: tab.preview
 		});
 	};
 

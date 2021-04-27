@@ -21,6 +21,9 @@ export const Main = ({  }: MainProps) => {
 			<ControlPanel />
 			<Flex flex="1" flexDirection="column" width="100%" justifyContent="space-between">
 				<Tabs 
+					display="flex"
+					flex="1"
+					flexDirection="column"
 					isLazy
 					isManual 
 					index={tabs.active} 
@@ -62,26 +65,33 @@ export const Main = ({  }: MainProps) => {
 							})	
 						}
 					</TabList>
-					<TabPanels>
+					<TabPanels
+						display="flex"
+						flex="1"
+						flexDirection="column"
+						justifyContent="center"
+					>
 						{
-							tabs?.data.map((t, index) => {
+							tabs?.data.map((t, _index) => {
 								const imageIndex = images.data.findIndex((img) => img.key === t.key);
 								if(imageIndex == -1) {
 									return null;
 								}
 
-								const image = images.data[imageIndex];
-								const source = image.preview ? getDataURL({ format: image.metadata.format, data: image.preview }) : getFileURL(image.file);
+								const imageData = images.data[imageIndex];
+								const image =  images.data[imageIndex]?.preview || images.data[imageIndex]?.image;
+								const source = getDataURL({ format: image.metadata.format, data: image.data });
 
 								return (
 									<TabPanel 
-										key={`tab-panel-${index}`} 
+										key={`tab-panel-${imageData.key}`} 
 										display="flex" 
 										justifyContent="center"
 									>	
 										<Image
-											src={getDataURL({ format: image.metadata.format, data: image.preview ?? image.data })}
-											maxHeight="400px"
+											src={source}
+											width={image.metadata.width}
+											height={image.metadata.height}
 										/>
 									</TabPanel>
 								);

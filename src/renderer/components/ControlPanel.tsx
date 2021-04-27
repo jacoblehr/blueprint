@@ -59,7 +59,7 @@ const OPERATIONS: Array<OperationOption> = [
 
 export const ControlPanel = () => {
 	const { operations, tabs } = useAppContext();
-	const { mutateAsync: vipsOperation } = useVipsOperation();
+	const { mutateAsync: vipsOperation, isLoading } = useVipsOperation();
 	
 	const { operation, options, setOptionValue } = operations;
 	const activeOptions = SharpOperationOptions[operations.operation as SharpOperationKey];
@@ -82,20 +82,18 @@ export const ControlPanel = () => {
 
 		const vipsInput = {
 			operation: operation,
-			data: currentTab.preview ?? currentTab.data, 
+			data: currentTab.preview?.data ?? currentTab.image.data, 
 			isPreview: true,
 			...options[operation]
 		};
 
-		console.warn(vipsInput)
-
 		const result = await vipsOperation(vipsInput) as SharpOperationOutput;
 
-		const { preview } = result;
+		const { metadata, preview } = result;
 
 		tabs.update(tabs.active, {
 			...currentTab,
-			preview
+			preview: { metadata, data: preview }
 		});
 	};
 
@@ -153,6 +151,7 @@ export const ControlPanel = () => {
 						colorScheme="blue"
 						mr="0.5rem"
 						size="sm"
+						isLoading={isLoading}
 						isDisabled={actionsDisabled}
 						onClick={() => handleVips(operation as SharpOperationKey)}
 					>
@@ -160,6 +159,7 @@ export const ControlPanel = () => {
 					</Button>
 					<Button
 						size="sm"
+						isLoading={isLoading}
 						isDisabled={actionsDisabled || !tabs.data[tabs.active].preview}
 						onClick={handleDiscard}
 					>

@@ -1,12 +1,19 @@
 import * as React from "react";
+import { ImageMetadata } from "../../common/types";
+
+
 
 export type Image = {
 	key: string;
 	file?: string;
-	data?: string;
-	preview?: string;
-	metadata?: { format: string };
+	image?: ImageView;
+	preview?: ImageView;
 };
+
+export type ImageView = {
+	data: string;
+	metadata: ImageMetadata;
+}
 
 export const useImages = () => {
 	const [data, setData] = React.useState<Array<Image>>([]);

@@ -33,12 +33,12 @@ export const FitOption = { key: "fit", label: "Fit", type: "string" as SharpOpti
 export const HeightOption = { key: "height", label: "Height", type: "number" as SharpOptionType };
 export const LeftOption = { key: "left", label: "Left", type: "number" as SharpOptionType, default: 0 };
 export const RadiusOption = { key: "radius", label: "Radius", type: "number" as SharpOptionType, defaultValue: 5 };
-export const RightOption = { key: "left", label: "Left", type: "number" as SharpOptionType, default: 0 };
+export const TopOption = { key: "top", label: "Top", type: "number" as SharpOptionType, default: 0 };
 export const SizeOption = { key: "size", label: "Size", type: "number" as SharpOptionType, defaultValue: 3 };
 export const WidthOption = { key: "width", label: "Width", type: "number" as SharpOptionType };
 
 export const BlurOptions: Array<SharpOption> = [ RadiusOption ];
-export const CropOptions: Array<SharpOption> = [ LeftOption, RightOption, WidthOption, HeightOption ];
+export const CropOptions: Array<SharpOption> = [ LeftOption, TopOption, WidthOption, HeightOption ];
 export const FlipOptions: Array<SharpOption> = [ ];
 export const FlopOptions: Array<SharpOption> = [ ];
 export const GrayscaleOptions: Array<SharpOption> = [ ];
