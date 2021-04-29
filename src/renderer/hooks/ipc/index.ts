@@ -2,7 +2,7 @@ import { ipcRenderer } from "electron";
 import { useMutation, UseMutationOptions } from "react-query";
 import { FileOperationResult } from "../../../common/types";
 
-export const useOpenImage = (options?: UseMutationOptions<unknown, unknown, FileOperationResult, unknown>) => {
+export const useOpenImage = (options?: any) => {
 	const openImage = () => {
 		return ipcRenderer.invoke("file-open", {
 			filters: [
@@ -11,14 +11,14 @@ export const useOpenImage = (options?: UseMutationOptions<unknown, unknown, File
 		});
 	};
 
-	return useMutation<FileOperationResult, unknown, void, unknown>(openImage);
+	return useMutation<FileOperationResult, unknown, void, unknown>(openImage, { ...options });
 };
 
 type SaveImageArgs = {
 	data: string;
 };
 
-export const useSaveImage = (options?: UseMutationOptions<unknown, unknown, FileOperationResult, unknown>) => {
+export const useSaveImage = (options?: any) => {
 	const saveImage = ({ data }: SaveImageArgs) => {
 		return ipcRenderer.invoke("file-save", {
 			data: data,
@@ -28,7 +28,7 @@ export const useSaveImage = (options?: UseMutationOptions<unknown, unknown, File
 		});
 	};
 
-	return useMutation<FileOperationResult, unknown, SaveImageArgs, unknown>(saveImage);
+	return useMutation<FileOperationResult, unknown, SaveImageArgs, unknown>(saveImage, { ...options });
 };
 
 export default {

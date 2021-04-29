@@ -9,7 +9,8 @@ module.exports = {
     rules: require('./webpack.rules'),
   },
   externals: {
-    sharp: "sharp"
+    sharp: "sharp",
+    sqlite3: "sqlite3"
   },
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json']
