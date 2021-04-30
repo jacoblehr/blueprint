@@ -2,11 +2,14 @@ import { app, BrowserWindow, Menu } from 'electron';
 import contextMenu from 'electron-context-menu';
 
 import { registerHandlers } from "./main/handlers/ipc";
+import database from "./main/db";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
 import { protocol } from "electron";
+import sqlite from "sqlite3";
 
+let db: sqlite.Database;
 // Allows loading local images
 app.whenReady().then(() => {
   protocol.registerFileProtocol('file', (request, callback) => {
@@ -43,7 +46,6 @@ const createWindow = (): void => {
 	// and load the index.html of the app.
 	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-	registerHandlers();
 	contextMenu();
 
 	// Open the DevTools.
@@ -53,7 +55,16 @@ const createWindow = (): void => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', async function() {
+	registerHandlers();
+	db = await database.init();
+	await database.migrate(db);
+	createWindow();
+});
+
+app.on("quit", async () => {
+	if(db) { await db.close() }
+})
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
