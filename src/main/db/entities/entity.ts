@@ -40,16 +40,20 @@ export type BulkDeleteOperation<T> = {
 	};
 };
 
-export type Entity<T> = {
+export type IDSchema = {
+	id: number;
+};
+
+export type Entity<ReadSchema, WriteSchema> = {
 	init: (db: sqlite.Database) => Promise<void>;
 
-	create?: (args: { db: sqlite.Database } & CreateOperation<T>) => Promise<T>;
-	read?: (args: { db: sqlite.Database } & ReadOperation<T>) => Promise<T>;
-	update?: (args: { db: sqlite.Database } & UpdateOperation<T>) => Promise<T>;
-	delete?: (args: { db: sqlite.Database } & DeleteOperation<T>) => Promise<T>;
+	create?: (args: { db: sqlite.Database } & CreateOperation<WriteSchema>) => Promise<ReadSchema>;
+	read?: (args: { db: sqlite.Database } & ReadOperation<IDSchema>) => Promise<ReadSchema>;
+	update?: (args: { db: sqlite.Database } & UpdateOperation<WriteSchema>) => Promise<ReadSchema>;
+	delete?: (args: { db: sqlite.Database } & DeleteOperation<IDSchema>) => Promise<void>;
 
-	createBulk?: (args: { db: sqlite.Database } & BulkCreateOperation<T>) => Promise<Array<T>>;
-	readBulk?: (args: { db: sqlite.Database } & BulkReadOperation<T>) => Promise<Array<T>>;
-	updateBulk?: (args: { db: sqlite.Database } & BulkUpdateOperation<T>) => Promise<Array<T>>;
-	deleteBulk?: (args: { db: sqlite.Database } & BulkDeleteOperation<T>) => Promise<Array<T>>;
+	createBulk?: (args: { db: sqlite.Database } & BulkCreateOperation<WriteSchema>) => Promise<Array<ReadSchema>>;
+	readBulk?: (args: { db: sqlite.Database } & BulkReadOperation<IDSchema>) => Promise<Array<ReadSchema>>;
+	updateBulk?: (args: { db: sqlite.Database } & BulkUpdateOperation<WriteSchema>) => Promise<Array<ReadSchema>>;
+	deleteBulk?: (args: { db: sqlite.Database } & BulkDeleteOperation<IDSchema>) => Promise<Array<ReadSchema>>;
 }
