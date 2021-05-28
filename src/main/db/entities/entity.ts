@@ -47,10 +47,10 @@ export type IDSchema = {
 export type Entity<ReadSchema, WriteSchema> = {
 	init: (db: sqlite.Database) => Promise<void>;
 
-	create?: (args: { db: sqlite.Database } & CreateOperation<WriteSchema>) => Promise<ReadSchema>;
-	read?: (args: { db: sqlite.Database } & ReadOperation<IDSchema>) => Promise<ReadSchema>;
-	update?: (args: { db: sqlite.Database } & UpdateOperation<WriteSchema>) => Promise<ReadSchema>;
-	delete?: (args: { db: sqlite.Database } & DeleteOperation<IDSchema>) => Promise<void>;
+	create: (args: { db: sqlite.Database } & CreateOperation<WriteSchema>) => Promise<ReadSchema>;
+	read: (args: { db: sqlite.Database } & ReadOperation<IDSchema>) => Promise<ReadSchema>;
+	update: (args: { db: sqlite.Database } & UpdateOperation<WriteSchema>) => Promise<ReadSchema>;
+	delete: (args: { db: sqlite.Database } & DeleteOperation<IDSchema>) => Promise<void>;
 
 	createBulk?: (args: { db: sqlite.Database } & BulkCreateOperation<WriteSchema>) => Promise<Array<ReadSchema>>;
 	readBulk?: (args: { db: sqlite.Database } & BulkReadOperation<IDSchema>) => Promise<Array<ReadSchema>>;
