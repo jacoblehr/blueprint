@@ -72,13 +72,11 @@ const Images: Entity<ReadImage, WriteImage> = {
 	},
 
 	create: async ({ db, input }) => {
-		const insertStatement = db.prepare(`
-
-		`);
+		const insertStatement = db.prepare(CREATE_IMAGE_SQL);
 		
 		const createResponse = await insertStatement.run({...input});
 
-		const selectStatement = db.prepare<{ id: number }>(CREATE_IMAGE_SQL);
+		const selectStatement = db.prepare<{ id: number }>(READ_IMAGE_SQL);
 		const image = await selectStatement.get({ id: Number(createResponse.lastInsertRowid) });
 		if(!image) {
 			throw new Error("Failed to create image");
