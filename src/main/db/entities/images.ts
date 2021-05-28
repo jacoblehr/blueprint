@@ -17,6 +17,32 @@ export interface WriteImage {
 
 export type Image = ReadImage;
 
+const CREATE_IMAGE_SQL = `
+	INSERT INTO images (name, data, metadata)
+	VALUES (@name, @data, @metadata);
+`;
+
+const READ_IMAGE_SQL = `
+	SELECT *
+	FROM images
+	WHERE id = @id;
+`;
+
+const UPDATE_IMAGE_SQL = `
+	UPDATE images
+	SET
+		name = @name,
+		data = @data,
+		metadata = @metadata
+	WHERE id = @id;
+`;
+
+const DELETE_IMAGE_SQL = `
+	DELETE
+	FROM images
+	WHERE id = @id
+`;
+
 const Images: Entity<ReadImage, WriteImage> = {
 	init: async (db: sqlite.Database) => {
 		await db.exec(`
@@ -47,18 +73,12 @@ const Images: Entity<ReadImage, WriteImage> = {
 
 	create: async ({ db, input }) => {
 		const insertStatement = db.prepare(`
-			INSERT INTO images (name, data, metadata)
-			VALUES (@name, @data, @metadata);
+
 		`);
 		
 		const createResponse = await insertStatement.run({...input});
 
-		const selectStatement = db.prepare<{ id: number }>(`
-			SELECT *
-			FROM images
-			WHERE id = @id;
-		`);
-
+		const selectStatement = db.prepare<{ id: number }>(CREATE_IMAGE_SQL);
 		const image = await selectStatement.get({ id: Number(createResponse.lastInsertRowid) });
 		if(!image) {
 			throw new Error("Failed to create image");
@@ -68,12 +88,7 @@ const Images: Entity<ReadImage, WriteImage> = {
 	},
 
 	read: async ({ db, id }) => {
-		const selectStatement = db.prepare<{ id: number }>(`
-			SELECT *
-			FROM images
-			WHERE id = @id;
-		`);
-
+		const selectStatement = db.prepare<{ id: number }>(READ_IMAGE_SQL);
 		const image = await selectStatement.get({ id });
 		if(!image) {
 			throw new Error(`No image with id ${id}`);
@@ -83,25 +98,14 @@ const Images: Entity<ReadImage, WriteImage> = {
 	},
 
 	update: async ({ db, id, input }) => {
-		const selectStatement = await db.prepare<{ id: number }>(`
-			SELECT *
-			FROM images
-			WHERE id = @id;
-		`);
+		const selectStatement = await db.prepare<{ id: number }>(READ_IMAGE_SQL);
 
 		const image = await selectStatement.get({ id });
 		if(!image) {
 			throw new Error(`No image with id ${id}`);
 		}
 
-		const updateStatement = await db.prepare<{ id: number } & WriteImage>(`
-			UPDATE images
-			SET
-				name = @name,
-				data = @data,
-				metadata = @metadata
-			WHERE id = @id;
-		`);
+		const updateStatement = await db.prepare<{ id: number } & WriteImage>(UPDATE_IMAGE_SQL);
 
 		await updateStatement.run({
 			id: id,
@@ -116,22 +120,14 @@ const Images: Entity<ReadImage, WriteImage> = {
 	},
 
 	delete: async ({ db, id }) => {
-		const selectStatement = await db.prepare<{ id: number }>(`
-			SELECT *
-			FROM images
-			WHERE id = @id;
-		`);
+		const selectStatement = await db.prepare<{ id: number }>(READ_IMAGE_SQL);
 
 		const image = await selectStatement.get({ id });
 		if(!image) {
 			throw new Error(`No image with id ${id}`);
 		}
 
-		const deleteStatement = await db.prepare<{ id: number }>(`
-			DELETE
-			FROM images
-			WHERE id = @id
-		`);
+		const deleteStatement = await db.prepare<{ id: number }>(DELETE_IMAGE_SQL);
 
 		await deleteStatement.run({ id });
 
