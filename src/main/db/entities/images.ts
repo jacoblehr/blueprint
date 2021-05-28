@@ -1,17 +1,16 @@
-import { Image } from "@chakra-ui/image";
 import sqlite from "better-sqlite3";
 import { Entity } from "./entity";
 
-interface Image {
-	id: number;
-	name: string;
-	data: string;
-	metadata: string;
-	created_at: string;
-	updated_at: string;
+export interface Image {
+	id?: number;
+	name?: string;
+	data?: string;
+	metadata?: string;
+	created_at?: string;
+	updated_at?: string;
 }
 
-const Images: Entity = {
+const Images: Entity<Image> = {
 	init: async (db: sqlite.Database): Promise<void> => {
 		await db.exec(`
 			CREATE TABLE IF NOT EXISTS images (
@@ -37,7 +36,8 @@ const Images: Entity = {
 		`);
 
 		return;
-	}
+	},
+	
 };
 
 export default Images;

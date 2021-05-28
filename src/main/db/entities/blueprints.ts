@@ -1,7 +1,15 @@
 import sqlite from "better-sqlite3";
 import { Entity } from "./entity";
 
-const Blueprints: Entity = {
+export interface Blueprint {
+	id?: number;
+	name?: string;
+	data?: string;
+	created_at?: string;
+	updated_at?: string;
+}
+
+const Blueprints: Entity<Blueprint> = {
 	init: async (db: sqlite.Database): Promise<void> => {
 		await db.exec(`
 			CREATE TABLE IF NOT EXISTS blueprints (
