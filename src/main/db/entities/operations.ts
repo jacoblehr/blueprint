@@ -1,9 +1,9 @@
-import sqlite from "sqlite3";
+import sqlite from "better-sqlite3";
 import { Entity } from "./entity";
 
 const Operations: Entity = {
 	init: async (db: sqlite.Database): Promise<void> => {
-		await db.run(`
+		await db.exec(`
 			CREATE TABLE IF NOT EXISTS operations (
 				id INTEGER PRIMARY KEY,
 				image_id INTEGER NOT NULL,

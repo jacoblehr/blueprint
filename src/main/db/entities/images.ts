@@ -1,5 +1,5 @@
 import { Image } from "@chakra-ui/image";
-import sqlite from "sqlite3";
+import sqlite from "better-sqlite3";
 import { Entity } from "./entity";
 
 interface Image {
@@ -13,7 +13,7 @@ interface Image {
 
 const Images: Entity = {
 	init: async (db: sqlite.Database): Promise<void> => {
-		await db.run(`
+		await db.exec(`
 			CREATE TABLE IF NOT EXISTS images (
 				id INTEGER PRIMARY KEY,
 				name TEXT NOT NULL,

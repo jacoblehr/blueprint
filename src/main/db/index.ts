@@ -1,14 +1,17 @@
-import sqlite from "sqlite3";
+import sqlite from "better-sqlite3";
 import Blueprints from "./entities/blueprints";
 
 import Images from "./entities/images";
 import Operations from "./entities/operations";
 
-const DB_FILE_NAME = "blueprint.sqlite";
-
 const init = async (): Promise<sqlite.Database> => {
-	const database = new sqlite.Database(DB_FILE_NAME);
+	const database = new sqlite(":memory:");
 	return database;
+};
+
+const close = async(database: sqlite.Database): Promise<void> => {
+	await database.close();
+	return;
 };
 
 const migrate = async (database: sqlite.Database): Promise<void> => {
@@ -19,4 +22,13 @@ const migrate = async (database: sqlite.Database): Promise<void> => {
 	return; 
 };
 
-export default { init, migrate };
+const save = async(database: sqlite.Database, filename: string): Promise<sqlite.BackupMetadata> => {
+	return await database.backup(filename);
+};
+
+export default { 
+	init,
+	close,
+	migrate,
+	save
+};
