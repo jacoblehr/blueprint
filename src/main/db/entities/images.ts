@@ -1,5 +1,15 @@
+import { Image } from "@chakra-ui/image";
 import sqlite from "sqlite3";
 import { Entity } from "./entity";
+
+interface Image {
+	id: number;
+	name: string;
+	data: string;
+	metadata: string;
+	created_at: string;
+	updated_at: string;
+}
 
 const Images: Entity = {
 	init: async (db: sqlite.Database): Promise<void> => {
