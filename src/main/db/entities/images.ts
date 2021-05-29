@@ -17,121 +17,56 @@ export interface WriteImage {
 
 export type Image = ReadImage;
 
-const CREATE_IMAGE_SQL = `
-	INSERT INTO images (name, data, metadata)
-	VALUES (@name, @data, @metadata);
-`;
+class Images extends Entity<ReadImage, WriteImage> {
 
-const READ_IMAGE_SQL = `
-	SELECT *
-	FROM images
-	WHERE id = @id;
-`;
+	public initStatement: string = `
+		CREATE TABLE IF NOT EXISTS images (
+			id INTEGER PRIMARY KEY,
+			name TEXT NOT NULL,
+			data TEXT NOT NULL,
+			metadata TEXT NOT NULL,
+			created_at DATETIME NOT NULL,
+			updated_at DATETIME NOT NULL
+		);
 
-const UPDATE_IMAGE_SQL = `
-	UPDATE images
-	SET
-		name = @name,
-		data = @data,
-		metadata = @metadata
-	WHERE id = @id;
-`;
+		CREATE TRIGGER IF NOT EXISTS image_created
+		AFTER INSERT ON images
+		BEGIN
+			UPDATE images SET created_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+		END;
 
-const DELETE_IMAGE_SQL = `
-	DELETE
-	FROM images
-	WHERE id = @id
-`;
+		CREATE TRIGGER IF NOT EXISTS image_updated
+		AFTER UPDATE ON images
+		BEGIN
+			UPDATE images SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+		END;
+	`
 
-const Images: Entity<ReadImage, WriteImage> = {
-	init: async (db: sqlite.Database) => {
-		await db.exec(`
-			CREATE TABLE IF NOT EXISTS images (
-				id INTEGER PRIMARY KEY,
-				name TEXT NOT NULL,
-				data TEXT NOT NULL,
-				metadata TEXT NOT NULL,
-				created_at DATETIME NOT NULL,
-				updated_at DATETIME NOT NULL
-			);
-			
-			CREATE TRIGGER IF NOT EXISTS image_created
-			AFTER INSERT ON images
-			BEGIN
-				UPDATE images SET created_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-			END;
+	public createStatement: string = `
+		INSERT INTO images (name, data, metadata)
+		VALUES (@name, @data, @metadata);
+	`;
 
-			CREATE TRIGGER IF NOT EXISTS image_updated
-			AFTER UPDATE ON images
-			BEGIN
-				UPDATE images SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-			END;
-		`);
+	public findStatement: string = `
+		SELECT *
+		FROM images
+		WHERE id = @id;
+	`;
 
-		return;
-	},
+	public updateStatement: string = `
+		UPDATE images
+		SET
+			name = @name,
+			data = @data,
+			metadata = @metadata
+		WHERE id = @id;
+	`;
 
-	create: async ({ db, input }) => {
-		const insertStatement = db.prepare(CREATE_IMAGE_SQL);
-		
-		const createResponse = await insertStatement.run({...input});
-
-		const selectStatement = db.prepare<{ id: number }>(READ_IMAGE_SQL);
-		const image = await selectStatement.get({ id: Number(createResponse.lastInsertRowid) });
-		if(!image) {
-			throw new Error("Failed to create image");
-		}
-
-		return image as Image;
-	},
-
-	read: async ({ db, id }) => {
-		const selectStatement = db.prepare<{ id: number }>(READ_IMAGE_SQL);
-		const image = await selectStatement.get({ id });
-		if(!image) {
-			throw new Error(`No image with id ${id}`);
-		}
-
-		return image as Image;
-	},
-
-	update: async ({ db, id, input }) => {
-		const selectStatement = await db.prepare<{ id: number }>(READ_IMAGE_SQL);
-
-		const image = await selectStatement.get({ id });
-		if(!image) {
-			throw new Error(`No image with id ${id}`);
-		}
-
-		const updateStatement = await db.prepare<{ id: number } & WriteImage>(UPDATE_IMAGE_SQL);
-
-		await updateStatement.run({
-			id: id,
-			name: input.name ?? image.name,
-			data: input.data ?? image.data,
-			metadata: input.data ?? image.mdata
-		});
-		
-		const updatedImage = await selectStatement.get({ id });
-		
-		return updatedImage as Image;
-	},
-
-	delete: async ({ db, id }) => {
-		const selectStatement = await db.prepare<{ id: number }>(READ_IMAGE_SQL);
-
-		const image = await selectStatement.get({ id });
-		if(!image) {
-			throw new Error(`No image with id ${id}`);
-		}
-
-		const deleteStatement = await db.prepare<{ id: number }>(DELETE_IMAGE_SQL);
-
-		await deleteStatement.run({ id });
-
-		return;
-	}
-	
+	public deleteStatement: string = `
+		DELETE
+		FROM images
+		WHERE id = @id
+	`;
 };
 
 export default Images;
