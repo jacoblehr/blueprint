@@ -3,7 +3,7 @@ import Blueprints from "./entities/blueprints";
 
 import Entities from "./entities";
 
-const init = async (): Promise<sqlite.Database> => {
+const init = (): sqlite.Database => {
 	const database = new sqlite(":memory:");
 	return database;
 };
@@ -25,8 +25,8 @@ const save = async(database: sqlite.Database, filename: string): Promise<sqlite.
 	return await database.backup(filename);
 };
 
-export default { 
-	init,
+export default {
+	database: init(), 
 	close,
 	migrate,
 	save

@@ -2,14 +2,13 @@ import { app, BrowserWindow, Menu } from 'electron';
 import contextMenu from 'electron-context-menu';
 
 import { registerHandlers } from "./main/handlers/ipc";
-import database from "./main/db";
+import db from "./main/db";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
 import { protocol } from "electron";
 import sqlite from "better-sqlite3";
 
-let db: sqlite.Database;
 // Allows loading local images
 app.whenReady().then(() => {
   protocol.registerFileProtocol('file', (request, callback) => {
@@ -57,13 +56,12 @@ const createWindow = (): void => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async function() {
 	registerHandlers();
-	db = await database.init();
-	await database.migrate(db);
+	await db.migrate(db.database);
 	createWindow();
 });
 
 process.on('exit', async () => {
-	if(db) { await db.close() }
+	if(db) { await db.close(db.database) }
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

@@ -1,6 +1,13 @@
 import { dialog, ipcMain } from "electron";
-import { Maybe, FileOperationArgs, FileOperationResult } from "../../common/types";
+import { FileOperationArgs } from "../../common/types";
 import * as vips from "./vips";
+
+import db from "../db";
+import Entities from "../db/entities";
+
+import { Blueprint } from "../db/entities/blueprints";
+import { Image } from "../db/entities/images";
+import { Operation } from "../db/entities/operations";
 
 export type VipsOperationArgs = {
 	file: string;
@@ -8,6 +15,9 @@ export type VipsOperationArgs = {
 
 export const registerHandlers = () => {
 
+	/**
+	 * File Management
+	 */
 	ipcMain.handle("file-open", async (event: Electron.IpcMainInvokeEvent, args: Electron.OpenDialogOptions) => {
 		const result = await dialog.showOpenDialog({ ...args });
 		const { canceled, filePaths } = result;
@@ -55,6 +65,9 @@ export const registerHandlers = () => {
 		};
 	});
 
+	/**
+	 * VIPS Operations
+	 */
 	ipcMain.handle("vips-operation", async (event: Electron.IpcMainInvokeEvent, args: any) => {
 		const vipsOperationArgs = args as FileOperationArgs;
 		const { file, data } = vipsOperationArgs;
@@ -75,5 +88,123 @@ export const registerHandlers = () => {
 		});
 
 		return output;
+	});
+
+	/**
+	 * Database Operations
+	 */
+	
+	// Blueprints
+	ipcMain.handle("create-blueprint", async (event: Electron.IpcMainInvokeEvent, args: Blueprint) => {
+		const { name, data } = args;
+
+		return await Entities.blueprints.create({
+			db: db.database,
+			input: { name, data }
+		});
+	});
+
+	ipcMain.handle("find-blueprint", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
+		const { id } = args;
+
+		return await Entities.blueprints.find({
+			db: db.database,
+			id
+		});
+	});
+
+	ipcMain.handle("update-blueprint", async (event: Electron.IpcMainInvokeEvent, args: Blueprint) => {
+		const { id, name, data } = args;
+
+		return await Entities.blueprints.update({
+			db: db.database,
+			id,
+			input: { name, data }
+		});
+	});
+
+	ipcMain.handle("delete-blueprint", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
+		const { id } = args;
+
+		return await Entities.blueprints.delete({
+			db: db.database,
+			id
+		});
+	});
+
+	// Images
+	ipcMain.handle("create-image", async (event: Electron.IpcMainInvokeEvent, args: Image) => {
+		const { name, data, metadata } = args;
+
+		return await Entities.images.create({
+			db: db.database,
+			input: { name, data, metadata }
+		});
+	});
+
+	ipcMain.handle("find-image", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
+		const { id } = args;
+
+		return await Entities.images.find({
+			db: db.database,
+			id
+		});
+	});
+
+	ipcMain.handle("update-image", async (event: Electron.IpcMainInvokeEvent, args: Image) => {
+		const { id, name, data, metadata } = args;
+
+		return await Entities.images.update({
+			db: db.database,
+			id,
+			input: { name, data, metadata }
+		});
+	});
+
+	ipcMain.handle("delete-image", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
+		const { id } = args;
+
+		return await Entities.images.delete({
+			db: db.database,
+			id
+		});
+	});
+
+	// Operations
+	ipcMain.handle("create-operation", async (event: Electron.IpcMainInvokeEvent, args: Operation) => {
+		const { image_id, blueprint_id, input_data, output_data, operation_data } = args;
+
+		return await Entities.operations.create({
+			db: db.database,
+			input: { image_id, blueprint_id, input_data, output_data, operation_data }
+		});
+	});
+
+	ipcMain.handle("find-operation", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
+		const { id } = args;
+
+		return await Entities.operations.find({
+			db: db.database,
+			id
+		});
+	});
+
+	ipcMain.handle("update-operation", async (event: Electron.IpcMainInvokeEvent, args: Operation) => {
+		const { id, image_id, blueprint_id, input_data, output_data, operation_data } = args;
+
+		return await Entities.operations.update({
+			db: db.database,
+			id,
+			input: { image_id, blueprint_id, input_data, output_data, operation_data }
+		});
+	});
+
+	ipcMain.handle("delete-operation", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
+		const { id } = args;
+
+		return await Entities.operations.delete({
+			db: db.database,
+			id
+		});
 	});
 }
