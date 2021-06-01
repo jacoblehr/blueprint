@@ -65,7 +65,12 @@ class Images extends Entity<ReadImage, WriteImage> {
 	public deleteStatement: string = `
 		DELETE
 		FROM images
-		WHERE id = @id
+		WHERE id = @id;
+	`;
+
+	public findAllStatement: string = `
+		SELECT *
+		FROM images
 	`;
 };
 

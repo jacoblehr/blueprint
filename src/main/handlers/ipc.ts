@@ -104,7 +104,7 @@ export const registerHandlers = () => {
 		});
 	});
 
-	ipcMain.handle("find-blueprint", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
+	ipcMain.handle("get-blueprint", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
 		const { id } = args;
 
 		return await Entities.blueprints.find({
@@ -132,6 +132,15 @@ export const registerHandlers = () => {
 		});
 	});
 
+	ipcMain.handle("get-blueprints", async (event: Electron.IpcMainInvokeEvent, args: Partial<Blueprint>) => {
+		const { id } = args;
+
+		return await Entities.blueprints.findAll({
+			db: db.database,
+			where: { ...args }
+		});
+	});
+
 	// Images
 	ipcMain.handle("create-image", async (event: Electron.IpcMainInvokeEvent, args: Image) => {
 		const { name, data, metadata } = args;
@@ -142,7 +151,7 @@ export const registerHandlers = () => {
 		});
 	});
 
-	ipcMain.handle("find-image", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
+	ipcMain.handle("get-image", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
 		const { id } = args;
 
 		return await Entities.images.find({
@@ -170,6 +179,15 @@ export const registerHandlers = () => {
 		});
 	});
 
+	ipcMain.handle("get-images", async (event: Electron.IpcMainInvokeEvent, args: Partial<Image>) => {
+		const { id } = args;
+
+		return await Entities.images.findAll({
+			db: db.database,
+			where: { ...args }
+		});
+	});
+
 	// Operations
 	ipcMain.handle("create-operation", async (event: Electron.IpcMainInvokeEvent, args: Operation) => {
 		const { image_id, blueprint_id, input_data, output_data, operation_data } = args;
@@ -180,7 +198,7 @@ export const registerHandlers = () => {
 		});
 	});
 
-	ipcMain.handle("find-operation", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
+	ipcMain.handle("get-operation", async (event: Electron.IpcMainInvokeEvent, args: { id: number }) => {
 		const { id } = args;
 
 		return await Entities.operations.find({
@@ -205,6 +223,15 @@ export const registerHandlers = () => {
 		return await Entities.operations.delete({
 			db: db.database,
 			id
+		});
+	});
+
+	ipcMain.handle("get-operations", async (event: Electron.IpcMainInvokeEvent, args: Partial<Operation>) => {
+		const { id } = args;
+
+		return await Entities.operations.findAll({
+			db: db.database,
+			where: { ...args }
 		});
 	});
 }

@@ -77,8 +77,13 @@ class Operations extends Entity<ReadOperation, WriteOperation> {
 	public deleteStatement: string = `
 		DELETE
 		FROM operations
-		WHERE id = @id
+		WHERE id = @id;
 	`;
+
+	public findAllStatement: string = `
+		SELECT *
+		FROM operations
+	`
 
 };
 

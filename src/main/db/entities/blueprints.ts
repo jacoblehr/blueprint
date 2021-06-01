@@ -62,7 +62,12 @@ class Blueprints extends Entity<ReadBlueprint, WriteBlueprint> {
 	public deleteStatement: string = `
 		DELETE
 		FROM blueprints
-		WHERE id = @id
+		WHERE id = @id;
+	`;
+
+	public findAllStatement: string = `
+		SELECT *
+		FROM blueprints
 	`;
 
 };

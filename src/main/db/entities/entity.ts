@@ -17,27 +17,8 @@ export type DeleteOperation<T> = {
 	id: number;
 };
 
-export type BulkCreateOperation<T> = {
-	input: Array<Omit<T, "id">>;
-};
-
 export type BulkReadOperation<T> = {
-	where?: {
-		[key: string]: keyof T;
-	}
-};
-
-export type BulkUpdateOperation<T> = {
-	where?: {
-		[key: string]: keyof T;
-	};
-	input: Partial<T>;
-};
-
-export type BulkDeleteOperation<T> = {
-	where?: {
-		[key: string]: keyof T;
-	};
+	where?: Partial<T>;
 };
 
 export type IDSchema = {
@@ -47,10 +28,13 @@ export type IDSchema = {
 export abstract class Entity<ReadSchema, WriteSchema> {
 
 	public abstract initStatement: string;
+
 	public abstract createStatement: string;
 	public abstract findStatement: string;
 	public abstract updateStatement: string;
 	public abstract deleteStatement: string;
+
+	public abstract findAllStatement: string;
 
 	public async init (db: sqlite.Database): Promise<void> {
 		await db.exec(this.initStatement);
@@ -112,8 +96,20 @@ export abstract class Entity<ReadSchema, WriteSchema> {
 		await deleteStatement.run({ id });
 	}
 
-	// createBulk?: (args: { db: sqlite.Database } & BulkCreateOperation<WriteSchema>) => Promise<Array<ReadSchema>>;
-	// readBulk?: (args: { db: sqlite.Database } & BulkReadOperation<IDSchema>) => Promise<Array<ReadSchema>>;
-	// updateBulk?: (args: { db: sqlite.Database } & BulkUpdateOperation<WriteSchema>) => Promise<Array<ReadSchema>>;
-	// deleteBulk?: (args: { db: sqlite.Database } & BulkDeleteOperation<IDSchema>) => Promise<Array<ReadSchema>>;
+	public async findAll(args: { db: sqlite.Database } & BulkReadOperation<ReadSchema>): Promise<Array<ReadSchema>> {
+		const { db, where } = args;
+
+		const readStatementRaw = this.findAllStatement;
+
+		const readStatement = await db.prepare<Partial<ReadSchema>>(`
+			${ readStatementRaw }
+			${ where ? Object.keys(where).map((key: string, index: number) => {
+				return `
+					${ index === 0 ? 'WHERE' : 'AND' } ${key} = @${key}
+				`
+			}).join("\n") : ''}
+		`);
+
+		return await readStatement.get({ ...where });
+	}
 }
