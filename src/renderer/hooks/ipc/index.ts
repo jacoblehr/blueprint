@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { useMutation, UseMutationOptions } from "react-query";
+import { useMutation } from "react-query";
 import { FileOperationResult } from "../../../common/types";
 
 export const useOpenImage = (options?: any) => {

@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { useMutation, UseMutationOptions } from "react-query";
+import { useMutation } from "react-query";
 import { SharpOperationOutput } from "../../../common/types";
 
 // TO DO: Type this properly - generics?
