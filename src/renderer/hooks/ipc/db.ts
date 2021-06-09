@@ -1,9 +1,13 @@
 import { ipcRenderer } from "electron";
-import { useMutation } from "react-query";
+import { useMutation, useQuery, QueryKey, QueryFunctionContext } from "react-query";
 import { IDSchema } from "../../../main/db/entities/entity";
 import { WriteBlueprint, Blueprint } from "../../../main/db/entities/blueprints";
 import { WriteImage, Image } from "../../..//main/db/entities/images";
 import { WriteOperation, Operation } from "../../../main/db/entities/operations";
+
+export const BLUEPRINTS_KEY = `blueprints`;
+export const IMAGES_KEY = `images`;
+export const OPERATIONS_KEY = `operations`;
 
 /**
  * Blueprints
@@ -18,15 +22,14 @@ export const useCreateBlueprint = (options?: any) => {
 	return useMutation<Blueprint, unknown, WriteBlueprint, unknown>(createBlueprint, { ...options });
 };
 
-// TODO: Convert this to useQuery
-export const useGetBlueprint = (options?: any) => {
-	const getBlueprint = (input: IDSchema) => {
+export const useGetBlueprint = (options: { id: number } & any) => {
+	const getBlueprint = (input: IDSchema & QueryFunctionContext) => {
 		return ipcRenderer.invoke("get-blueprint", {
 			...input
 		});
 	};
 
-	return useMutation<Blueprint, unknown, IDSchema, unknown>(getBlueprint, { ...options });
+	return useQuery<IDSchema, unknown, IDSchema, QueryKey>(`${BLUEPRINTS_KEY}-${options.id}`, getBlueprint, options);
 };
 
 export const useUpdateBlueprint = (options?: any) => {
@@ -49,15 +52,14 @@ export const useDeleteBlueprint = (options?: any) => {
 	return useMutation<Blueprint, unknown, IDSchema, unknown>(deleteBlueprint, { ...options });
 };
 
-// TODO: Convert this to useQuery
 export const useGetBlueprints = (options?: any) => {
-	const getBlueprints = (input: Partial<Blueprint>) => {
+	const getBlueprints = (input: Partial<Blueprint> & QueryFunctionContext) => {
 		return ipcRenderer.invoke("get-blueprints", {
 			...input
 		});
 	};
 
-	return useMutation<Blueprint[], unknown, Partial<Blueprint>, unknown>(getBlueprints, { ...options });
+	return useQuery<Blueprint[], unknown, Partial<Blueprint>, QueryKey>(`${BLUEPRINTS_KEY}`, getBlueprints, { ...options });
 };
 
 /**
@@ -73,15 +75,14 @@ export const useGetBlueprints = (options?: any) => {
 	return useMutation<Image, unknown, WriteImage, unknown>(createImage, { ...options });
 };
 
-// TODO: Convert this to useQuery
-export const useGetImage = (options?: any) => {
-	const getImage = (input: IDSchema) => {
+export const useGetImage = (options: { id: number } & any) => {
+	const getImage = (input: IDSchema & QueryFunctionContext) => {
 		return ipcRenderer.invoke("get-image", {
 			...input
 		});
 	};
 
-	return useMutation<Image, unknown, IDSchema, unknown>(getImage, { ...options });
+	return useQuery<Image, unknown, IDSchema, QueryKey>(`${IMAGES_KEY}-${options.id}`, getImage, { ...options });
 };
 
 export const useUpdateImage = (options?: any) => {
@@ -104,15 +105,14 @@ export const useDeleteImage = (options?: any) => {
 	return useMutation<Image, unknown, IDSchema, unknown>(deleteImage, { ...options });
 };
 
-// TODO: Convert this to useQuery
 export const useGetImages = (options?: any) => {
-	const getImages = (input: Partial<Image>) => {
+	const getImages = (input: Partial<Image> & QueryFunctionContext) => {
 		return ipcRenderer.invoke("get-images", {
 			...input
 		});
 	};
 
-	return useMutation<Image[], unknown, Partial<Image>, unknown>(getImages, { ...options });
+	return useQuery<Image[], unknown, Partial<Image>, QueryKey>(`${IMAGES_KEY}`, getImages, { ...options });
 };
 
 /**
@@ -128,15 +128,14 @@ export const useGetImages = (options?: any) => {
 	return useMutation<Operation, unknown, WriteOperation, unknown>(createOperation, { ...options });
 };
 
-// TODO: Convert this to useQuery
-export const useGetOperation = (options?: any) => {
-	const getOperation = (input: IDSchema) => {
+export const useGetOperation = (options: { id: number } & any) => {
+	const getOperation = (input: IDSchema & QueryFunctionContext) => {
 		return ipcRenderer.invoke("get-operation", {
 			...input
 		});
 	};
 
-	return useMutation<Operation, unknown, IDSchema, unknown>(getOperation, { ...options });
+	return useQuery<Operation, unknown, IDSchema, QueryKey>(`${OPERATIONS_KEY}-${options.id}`, getOperation, { ...options });
 };
 
 export const useUpdateOperation = (options?: any) => {
@@ -159,13 +158,12 @@ export const useDeleteOperation = (options?: any) => {
 	return useMutation<Operation, unknown, IDSchema, unknown>(deleteOperation, { ...options });
 };
 
-// TODO: Convert this to useQuery
 export const useGetOperations = (options?: any) => {
-	const getOperations = (input: Partial<Operation>) => {
+	const getOperations = (input: Partial<Operation> & QueryFunctionContext) => {
 		return ipcRenderer.invoke("get-operations", {
 			...input
 		});
 	};
 
-	return useMutation<Operation[], unknown, Partial<Operation>, unknown>(getOperations, { ...options });
+	return useQuery<Operation[], unknown, Partial<Operation>, QueryKey>(`${OPERATIONS_KEY}`, getOperations, { ...options });
 };
