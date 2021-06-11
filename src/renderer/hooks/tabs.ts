@@ -1,19 +1,20 @@
 import * as React from "react";
 
-import { Image, ImageView } from "./images";
+import { ImageView } from "./images";
+import { Image, ReadImage, WriteImage } from "../../main/db/entities/images";
 
 export type Tab = {
 	key: string;
 	title?: string;
 	file?: string;
-	image?: ImageView;
+	image?: ReadImage;
 	preview?: ImageView;
 };
 
 export type UseTabsArgs = {
 	images: Array<Image>;
-	addImage: (image: Image) => void;
-	updateImage: (key: string, image: Image) => void;
+	addImage: (image: WriteImage) => void;
+	updateImage: (id: number, image: WriteImage) => void;
 };
 
 export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
@@ -29,13 +30,12 @@ export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
 
 		const updatedData = [...data];
 		updatedData.splice(index ?? data.length, 0, tab);
-		const image = images.find((img: Image) => img.key === tab.key);
+		const image = images.find((img: Image) => img.id === tab.image.id);
 		if(!image) {
 			addImage({
-				key: tab.key,
-				file: tab.file,
-				image: tab.image,
-				preview: tab.preview
+				name: tab.file,
+				data: tab.image.data,
+				metadata: tab.image.metadata
 			});
 		}
 
@@ -62,28 +62,25 @@ export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
 		}
 
 		setData(updatedData);
-		updateImage(target.key, {
-			key: target.key,
-			file: target.file,
-			image: target.image,
-			preview: null
+		updateImage(target.image.id!, {
+			data: JSON.stringify(target.preview.data),
+			metadata: JSON.stringify(target.preview.metadata),
 		});
 	};
 
 	const update = (index: number, tab: Tab) => {
 		const updatedData = [...data];
-		const oldKey = updatedData[index].key;
+
+		const oldImage = updatedData[index].image;
 		
 		updatedData[index] = {
 			...tab
 		};
 		setData(updatedData);
 		
-		updateImage(oldKey, {
-			key: tab.key,
-			file: tab.file,
-			image: tab.image,
-			preview: tab.preview
+		updateImage(oldImage.id, {
+			data: JSON.stringify(tab.preview.data),
+			metadata: JSON.stringify(tab.preview.metadata),
 		});
 	};
 

@@ -24,7 +24,7 @@ export const useAppContext = () => React.useContext<AppContext>(AppContext);
 export const AppContextProvider: React.FC = ({ children }) => {
 	const imagesController = useImages();
 	const tabController = useTabs({
-		images: imagesController.data,
+		images: imagesController.data ?? [],
 		addImage: imagesController.add,
 		updateImage: imagesController.update
 	});
@@ -37,7 +37,7 @@ export const AppContextProvider: React.FC = ({ children }) => {
 		},
 		images: {
 			...imagesController,
-			data: [...imagesController.data]
+			data: imagesController.data ? [...imagesController.data] : []
 		},
 		operations: {
 			...operationsController,

@@ -18,7 +18,8 @@ import { FiLayers as Layers } from "react-icons/fi";
 import { useOpenImage, useSaveImage } from "../hooks/ipc";
 import { useAppContext } from "../context/AppContextProvider";
 
-import { Image } from "../hooks/images";
+import { Image } from "../../main/db/entities/images";
+
 import { SmallCloseIcon } from "@chakra-ui/icons";
 
 type SideBarProps = {
@@ -37,7 +38,7 @@ export const Sidebar = ({  }: SideBarProps) => {
 			tabs.add({
 				key: result.file,
 				file: result.file,
-				image: { data: result.data, metadata: result.metadata },
+				image: { data: result.data, metadata: JSON.stringify(result.metadata) } as any,
 				title: pathTokens[pathTokens.length - 1]
 			});
 		}
@@ -45,10 +46,9 @@ export const Sidebar = ({  }: SideBarProps) => {
 
 	const handleSave = async () => {
 		const activeTab = tabs?.data[tabs.active];
-		const activeImage = images?.data.find((img: Image) => img.key === activeTab.key);
 
-		if(activeImage) {
-			const result = await saveImage({ data: activeImage.preview.data ?? activeImage.image.data });
+		if(activeTab) {
+			const result = await saveImage({ data: activeTab.preview.data ?? activeTab.image.data });
 
 			if(!!result.file) {
 				const pathTokens = result.file.split("/");
@@ -59,7 +59,7 @@ export const Sidebar = ({  }: SideBarProps) => {
 					image: {
 						data: result.data,
 						metadata: result.metadata
-					},
+					} as any,
 					preview: null,
 					title: pathTokens[pathTokens.length - 1]
 				});
@@ -69,24 +69,26 @@ export const Sidebar = ({  }: SideBarProps) => {
 	};
 
 	const handleImageLinkClick = (img: Image) => {
-		const pathTokens = img.file.split("/");
+		const pathTokens = img.name.split("/");
 		
 		tabs.add({
-			key: img.key,
-			file: img.file,
+			key: img.name,
+			file: img.data,
 			image: {
-				data: img.image.data,
-				metadata: img.image.metadata
-			},
+				data: img.data,
+				metadata: img.metadata
+			} as any,
 			title: pathTokens[pathTokens.length - 1],
 			preview: null
 		});
 	};
 
 	const handleImageClose = (img: Image) => {
-		tabs.removeByKey(img.key);
-		images.remove(img.key);
+		tabs.remove(img.id);
+		images.remove(img.id);
 	};
+
+	console.warn(images);
 
 	return (
 		<Flex
@@ -122,9 +124,10 @@ export const Sidebar = ({  }: SideBarProps) => {
 						<AccordionPanel padding="1rem">
 							{ 
 								images?.data?.map((img: Image, index: number) => {
-									const pathTokens = img.file.split("/");
+									const pathTokens = img.name.split("/");
+
 									const activeTab = tabs?.data[tabs.active];
-									const isActive = activeTab?.key === img.key;
+									const isActive = activeTab?.image.id === img.id;
 
 									return (
 										<Flex 
@@ -137,7 +140,7 @@ export const Sidebar = ({  }: SideBarProps) => {
 											flex="1"
 											alignItems="center"
 											justifyContent="space-between"
-											key={`img-${img.key}`}
+											key={`img-${img.id}`}
 											cursor="pointer"
 											maxHeight="2rem"
 											isTruncated={true}
@@ -175,7 +178,7 @@ type ActionButtonProps = {
 }
 
 export const ActionButton = ({ action, icon, label }: ActionButtonProps) => {
-	const ActionIcon = <Icon fontSize="xs" aria-label={label} as={icon} />;
+	const ActionIcon = ( <Icon fontSize="xs" aria-label={label} as={icon} /> );
 
 	return (
 		<Button 

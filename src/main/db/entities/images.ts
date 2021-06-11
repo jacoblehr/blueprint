@@ -3,6 +3,7 @@ import { Entity } from "./entity";
 export interface ReadImage {
 	id: number;
 	name: string;
+	filename: string;
 	data: string;
 	metadata: string;
 	created_at: string;
@@ -11,6 +12,7 @@ export interface ReadImage {
 
 export interface WriteImage {
 	name?: string;
+	filename?: string;
 	data?: string;
 	metadata?: string;
 };
@@ -25,15 +27,9 @@ class Images extends Entity<ReadImage, WriteImage> {
 			name TEXT NOT NULL,
 			data TEXT NOT NULL,
 			metadata TEXT NOT NULL,
-			created_at DATETIME NOT NULL,
-			updated_at DATETIME NOT NULL
+			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			updated_at DATETIME
 		);
-
-		CREATE TRIGGER IF NOT EXISTS image_created
-		AFTER INSERT ON images
-		BEGIN
-			UPDATE images SET created_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-		END;
 
 		CREATE TRIGGER IF NOT EXISTS image_updated
 		AFTER UPDATE ON images

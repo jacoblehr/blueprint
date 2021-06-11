@@ -44,7 +44,7 @@ export abstract class Entity<ReadSchema, WriteSchema> {
 		const { db, input } = args;
 
 		// Create the entity
-		const insertStatement = db.prepare(this.initStatement);
+		const insertStatement = db.prepare(this.createStatement);
 		const createResponse = await insertStatement.run({ ...input })
 		
 		// Re-read the object
@@ -110,6 +110,11 @@ export abstract class Entity<ReadSchema, WriteSchema> {
 			}).join("\n") : ''}
 		`);
 
-		return await readStatement.get({ ...where });
+		console.warn(readStatement);
+
+		const result = await readStatement.all(where ?? {});
+		console.warn(result);
+
+		return result;
 	}
 }

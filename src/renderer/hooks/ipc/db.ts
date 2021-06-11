@@ -54,9 +54,7 @@ export const useDeleteBlueprint = (options?: any) => {
 
 export const useGetBlueprints = (options?: any) => {
 	const getBlueprints = (input: Partial<Blueprint> & QueryFunctionContext) => {
-		return ipcRenderer.invoke("get-blueprints", {
-			...input
-		});
+		return ipcRenderer.invoke("get-blueprints", {});
 	};
 
 	return useQuery<Blueprint[], unknown, Partial<Blueprint>, QueryKey>(`${BLUEPRINTS_KEY}`, getBlueprints, { ...options });
@@ -107,12 +105,10 @@ export const useDeleteImage = (options?: any) => {
 
 export const useGetImages = (options?: any) => {
 	const getImages = (input: Partial<Image> & QueryFunctionContext) => {
-		return ipcRenderer.invoke("get-images", {
-			...input
-		});
+		return ipcRenderer.invoke("get-images", {});
 	};
 
-	return useQuery<Image[], unknown, Partial<Image>, QueryKey>(`${IMAGES_KEY}`, getImages, { ...options });
+	return useQuery<Image[], unknown, Image[], QueryKey>(`${IMAGES_KEY}`, getImages, { ...options });
 };
 
 /**
@@ -160,9 +156,7 @@ export const useDeleteOperation = (options?: any) => {
 
 export const useGetOperations = (options?: any) => {
 	const getOperations = (input: Partial<Operation> & QueryFunctionContext) => {
-		return ipcRenderer.invoke("get-operations", {
-			...input
-		});
+		return ipcRenderer.invoke("get-operations", {});
 	};
 
 	return useQuery<Operation[], unknown, Partial<Operation>, QueryKey>(`${OPERATIONS_KEY}`, getOperations, { ...options });

@@ -1,6 +1,4 @@
 import sqlite from "better-sqlite3";
-import Blueprints from "./entities/blueprints";
-
 import Entities from "./entities";
 
 const init = (): sqlite.Database => {

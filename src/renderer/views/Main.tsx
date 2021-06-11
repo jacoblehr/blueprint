@@ -72,26 +72,22 @@ export const Main = ({  }: MainProps) => {
 						justifyContent="center"
 					>
 						{
-							tabs?.data.map((t, _index) => {
-								const imageIndex = images.data.findIndex((img) => img.key === t.key);
-								if(imageIndex == -1) {
-									return null;
-								}
+							tabs?.data.map((t, index) => {
+								const image =  t?.image || t?.preview;
+								const metadata = JSON.parse(t.image.metadata);
 
-								const imageData = images.data[imageIndex];
-								const image =  images.data[imageIndex]?.preview || images.data[imageIndex]?.image;
-								const source = getDataURL({ format: image.metadata.format, data: image.data });
+								const source = getDataURL({ format: metadata.format, data: image.data });
 
 								return (
 									<TabPanel 
-										key={`tab-panel-${imageData.key}`} 
+										key={`tab-panel-${index}`} 
 										display="flex" 
 										justifyContent="center"
 									>	
 										<Image
 											src={source}
-											width={image.metadata.width}
-											height={image.metadata.height}
+											width={metadata.width}
+											height={metadata.height}
 										/>
 									</TabPanel>
 								);

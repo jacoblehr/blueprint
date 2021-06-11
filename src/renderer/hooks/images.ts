@@ -1,9 +1,18 @@
 import * as React from "react";
+import { 
+	useCreateImage, 
+	useGetImage, 
+	useGetImages, 
+	useUpdateImage, 
+	useDeleteImage, 
+	IMAGES_KEY
+} from "../hooks/ipc/db";
 import { ImageMetadata } from "../../common/types";
 
+import { Image, WriteImage } from "../../main/db/entities/images";
+import { useQueryClient } from "react-query";
 
-
-export type Image = {
+export type _Image = {
 	key: string;
 	file?: string;
 	image?: ImageView;
@@ -16,33 +25,54 @@ export type ImageView = {
 }
 
 export const useImages = () => {
-	const [data, setData] = React.useState<Array<Image>>([]);
+	const { mutate: addImage } = useCreateImage();
+	const [imageData, setImageData] = React.useState<Array<Image>>([]);
+	const { data } = useGetImages({
+		onSuccess: (data: Array<Image>) => {
+			console.warn("get images", data);
+			setImageData(data);
+		}
+	});
+	const { mutate: updateImage } = useUpdateImage();
+	const { mutate: deleteImage } = useDeleteImage();
 
-	const add = (image: Image) => {
-		const updatedData = [...data];
-		updatedData.push(image);
-		setData(updatedData);
+	const queryClient = useQueryClient();
+
+	const add = (image: WriteImage) => {
+		addImage({ ...image }, {
+			onSuccess: () => {
+				queryClient.invalidateQueries(IMAGES_KEY);
+			},
+			onError: (e) => {
+				console.warn(`An error has occurred: ${e}`)
+			}
+		});
 	};
 
-	const remove = (key: string) => {
-		const updatedData = [...data];
-		const removeIndex = updatedData.findIndex((img: Image) => img.key === key);
-		updatedData.splice(removeIndex, 1);
-
-		setData(updatedData);
+	const remove = (id: number) => {
+		deleteImage({ id }, {
+			onSuccess: () => {
+				queryClient.invalidateQueries(IMAGES_KEY);
+			},
+			onError: (e) => {
+				console.warn(`An error has occurred: ${e}`)
+			}
+		});
 	};
 
-	const update = (key: string, image: Image) => {
-		const updatedData = [...data];
-		const updateIndex = updatedData.findIndex((img: Image) => img.key === key);
-		updatedData[updateIndex] = { ...image };
-		
-		setData(updatedData);
+	const update = (id: number, input: WriteImage) => {
+		updateImage({ id, ...input }, {
+			onSuccess: () => {
+				queryClient.invalidateQueries(IMAGES_KEY);
+			},
+			onError: (e) => {
+				console.warn(`An error has occurred: ${e}`)
+			}
+		})
 	};
 
 	return {
-		data,
-		setData,
+		data: imageData,
 		add,
 		remove,
 		update

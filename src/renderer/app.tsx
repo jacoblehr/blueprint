@@ -11,11 +11,11 @@ import { Layout } from "./views/Layout";
 const App = () => {
 	return (
 		<ChakraProvider>
-			<AppContextProvider>
-				<QueryClientProvider>
+			<QueryClientProvider>
+				<AppContextProvider>
 					<Layout />
-				</QueryClientProvider>
-			</AppContextProvider>
+				</AppContextProvider>
+			</QueryClientProvider>
 		</ChakraProvider>
 	)
 }
