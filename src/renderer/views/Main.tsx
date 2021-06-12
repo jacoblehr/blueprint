@@ -73,7 +73,7 @@ export const Main = ({  }: MainProps) => {
 					>
 						{
 							tabs?.data.map((t, index) => {
-								const image =  t?.image || t?.preview;
+								const image =  t?.preview || t?.image;
 								const metadata = JSON.parse(t.image.metadata);
 
 								const source = getDataURL({ format: metadata.format, data: image.data });

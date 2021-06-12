@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { ImageView } from "./images";
 import { Image, ReadImage, WriteImage } from "../../main/db/entities/images";
+import { Tab } from "@chakra-ui/tabs";
 
 export type Tab = {
 	key: string;
@@ -46,7 +47,7 @@ export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
 	const remove = (index: number) => {
 		const updatedData = [...data];
 		const target = updatedData[index];
-
+		
 		updatedData.splice(index, 1);
 
 		if(active > index) {
@@ -62,28 +63,26 @@ export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
 		}
 
 		setData(updatedData);
-		if(target.preview) {
-			updateImage(target.image.id!, {
-				data: target.preview.data ? JSON.stringify(target.preview.data) : null,
-				metadata: target.preview.metadata ? JSON.stringify(target.preview.metadata) : null,
-			});
-		}
 	};
 
 	const update = (index: number, tab: Tab) => {
 		const updatedData = [...data];
 
-		const oldImage = updatedData[index].image;
+		const tabImage = updatedData[index];
+		const image: Image = images.find((img: Image) => tabImage.key === img.name);
 		
 		updatedData[index] = {
 			...tab
 		};
 		setData(updatedData);
 		
-		updateImage(oldImage.id, {
-			data: JSON.stringify(tab.preview.data),
-			metadata: JSON.stringify(tab.preview.metadata),
-		});
+		if(tab.preview) {
+			updateImage(image.id!, {
+				name: image.name,
+				data: tab.preview?.data ?? null,
+				metadata: tab.preview.metadata ? JSON.stringify(tab.preview.metadata) : null,
+			});
+		}
 	};
 
 	const removeByKey = (key: string) => {
