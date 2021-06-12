@@ -1,9 +1,10 @@
 import * as React from "react";
-import { Flex, Image, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react"
+import { Flex, Image, Tabs, TabList, TabPanels, Tab, TabPanel, Box } from "@chakra-ui/react"
 import { useAppContext } from "../context/AppContextProvider";
 import { CloseIcon } from "@chakra-ui/icons";
 import { getDataURL } from "../util/string";
 import { ControlPanel } from "../components/ControlPanel";
+import { Resizable, ResizableProps } from "re-resizable";
 
 type MainProps = {
 
@@ -17,10 +18,11 @@ export const Main = ({  }: MainProps) => {
 	};
 	
     return (
-		<Flex flex="1" overflow="auto" width="100%" flexDirection="column" pt="0.5rem">
-			<ControlPanel />
-			<Flex flex="1" flexDirection="column" width="100%" justifyContent="space-between">
+		// <Flex flex="1" overflow="auto" width="100%" flexDirection="column" pt="0.5rem">
+			<Flex flex="1" flexDirection="column" width="100%" height="100%" justifyContent="space-between">
 				<Tabs 
+					borderBottom="1px solid"
+					borderColor="gray.300"
 					display="flex"
 					flex="1"
 					flexDirection="column"
@@ -29,6 +31,7 @@ export const Main = ({  }: MainProps) => {
 					index={tabs.active} 
 					width="100%" 
 					variant="enclosed-colored"
+					maxHeight="100vh"
 				>
 					<TabList mb="1em">
 						{
@@ -70,6 +73,7 @@ export const Main = ({  }: MainProps) => {
 						flex="1"
 						flexDirection="column"
 						justifyContent="center"
+						position="relative"
 					>
 						{
 							tabs?.data.map((t, index) => {
@@ -81,13 +85,18 @@ export const Main = ({  }: MainProps) => {
 								return (
 									<TabPanel 
 										key={`tab-panel-${index}`} 
-										display="flex" 
+										display="flex"
+										flex="1"
 										justifyContent="center"
 									>	
-										<Image
-											src={source}
-											width={metadata.width}
-											height={metadata.height}
+										<Flex
+											overflow="hidden"
+											bgImage={`"${source}"`}
+											bgSize="contain"
+											bgPosition="center"
+											bgRepeat="no-repeat"
+											width={`min(100%, ${metadata.width}px)`}
+											height={`min(100%, ${metadata.height}px)`}
 										/>
 									</TabPanel>
 								);
@@ -95,7 +104,28 @@ export const Main = ({  }: MainProps) => {
 						}
 					</TabPanels>
 				</Tabs>
+				<Resizable
+					handleStyles={{
+						topLeft: { display: "none" },
+						topRight: { display: "none" },
+						bottomLeft: { display: "none" },
+						bottomRight: { display: "none" },
+						bottom: { display: "none" },
+						right: { display: "none" },
+						left: { display: "none "},
+					}}
+					defaultSize={{ 
+						width: "100%",
+						height: "200px"
+					}}
+					maxWidth="100%"
+					minHeight="200px"
+					maxHeight="400px"
+				>
+					<ControlPanel />
+				</Resizable>
+				
 			</Flex>
-        </Flex>
+        // </Flex>
     );
 }
