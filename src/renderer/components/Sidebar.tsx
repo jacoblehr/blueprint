@@ -21,6 +21,7 @@ import { useAppContext } from "../context/AppContextProvider";
 import { Image } from "../../main/db/entities/images";
 
 import { SmallCloseIcon } from "@chakra-ui/icons";
+import { Tab } from "../hooks/tabs";
 
 type SideBarProps = {
 	
@@ -84,7 +85,12 @@ export const Sidebar = ({  }: SideBarProps) => {
 	};
 
 	const handleImageClose = (img: Image) => {
-		tabs.remove(img.id);
+		const tabIndex = tabs.data.findIndex((tab: Tab) => tab.key === img.name);
+
+		if(tabIndex !== -1) {
+			tabs.remove(tabIndex);
+		}
+
 		images.remove(img.id);
 	};
 

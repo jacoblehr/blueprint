@@ -33,7 +33,7 @@ export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
 		const image = images.find((img: Image) => img.name === tab.key);
 		if(!image) {
 			addImage({
-				name: tab.file,
+				name: tab.key,
 				data: tab.image.data,
 				metadata: tab.image.metadata
 			});
@@ -62,10 +62,12 @@ export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
 		}
 
 		setData(updatedData);
-		updateImage(target.image.id!, {
-			data: JSON.stringify(target.preview.data),
-			metadata: JSON.stringify(target.preview.metadata),
-		});
+		if(target.preview) {
+			updateImage(target.image.id!, {
+				data: target.preview.data ? JSON.stringify(target.preview.data) : null,
+				metadata: target.preview.metadata ? JSON.stringify(target.preview.metadata) : null,
+			});
+		}
 	};
 
 	const update = (index: number, tab: Tab) => {
