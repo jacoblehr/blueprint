@@ -88,8 +88,6 @@ export const Sidebar = ({  }: SideBarProps) => {
 		images.remove(img.id);
 	};
 
-	console.warn(images);
-
 	return (
 		<Flex
 			direction="column"

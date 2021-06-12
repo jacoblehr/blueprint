@@ -1,7 +1,6 @@
 import * as React from "react";
 import { 
 	useCreateImage, 
-	useGetImage, 
 	useGetImages, 
 	useUpdateImage, 
 	useDeleteImage, 
@@ -29,7 +28,6 @@ export const useImages = () => {
 	const [imageData, setImageData] = React.useState<Array<Image>>([]);
 	const { data } = useGetImages({
 		onSuccess: (data: Array<Image>) => {
-			console.warn("get images", data);
 			setImageData(data);
 		}
 	});

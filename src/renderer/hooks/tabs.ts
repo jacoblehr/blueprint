@@ -30,7 +30,7 @@ export const useTabs = ({ images, addImage, updateImage }: UseTabsArgs) => {
 
 		const updatedData = [...data];
 		updatedData.splice(index ?? data.length, 0, tab);
-		const image = images.find((img: Image) => img.id === tab.image.id);
+		const image = images.find((img: Image) => img.name === tab.key);
 		if(!image) {
 			addImage({
 				name: tab.file,
