@@ -59,7 +59,6 @@ export const useImages = () => {
 	};
 
 	const update = (id: number, input: WriteImage) => {
-		console.warn(input);
 		updateImage({ id, ...input }, {
 			onSuccess: () => {
 				queryClient.invalidateQueries(IMAGES_KEY);
