@@ -23,6 +23,8 @@ import { Image } from "../../main/db/entities/images";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { Tab } from "../hooks/tabs";
 import { useOpenWorkspace, useSaveWorkspace } from "../hooks/ipc/workspace";
+import { useQueryClient } from "react-query";
+import { IMAGES_KEY } from "../hooks/ipc/db";
 
 type SideBarProps = {
 	
@@ -34,6 +36,8 @@ export const Sidebar = ({  }: SideBarProps) => {
 	const { mutateAsync: saveImage } = useSaveImage();
 	const { mutateAsync: saveWorkspace } = useSaveWorkspace();
 	const { mutateAsync: openWorkspace } = useOpenWorkspace();
+
+	const queryClient = useQueryClient();
 	
 	const handleOpen = async () => {
 		const result = await openImage();
@@ -53,7 +57,11 @@ export const Sidebar = ({  }: SideBarProps) => {
 	};
 
 	const handleOpenWorkspace = async () => {
-		openWorkspace({});
+		openWorkspace({}, {
+			onSuccess: () => {
+				queryClient.invalidateQueries(IMAGES_KEY);
+			}
+		});
 	};
 
 	const handleSave = async () => {
