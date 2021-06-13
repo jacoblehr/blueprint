@@ -3,7 +3,9 @@ import { useMutation } from "react-query";
 import { SharpOperationOutput } from "../../../common/types";
 
 // TO DO: Type this properly - generics?
-type OperationParameters = any;
+type OperationParameters = {
+	imageID: number;
+} & any;
 
 export const useVipsOperation = (options?: any) => {
 	const _operation = (args: OperationParameters) => {

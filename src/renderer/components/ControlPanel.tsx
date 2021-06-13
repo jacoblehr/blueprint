@@ -4,6 +4,7 @@ import { useAppContext } from "../context/AppContextProvider";
 import { SharpOperationOptions, SharpOption, SharpOptionKey, SharpOptionType, SharpOptionValues } from "../../common/options";
 import { SharpOperationKey, SharpOperationOutput } from "../../common/types";
 import { useVipsOperation } from "../hooks/ipc/vips";
+import { ReadImage } from "../../main/db/entities/images";
 
 type OperationOption = {
 	key: string;
@@ -58,7 +59,7 @@ const OPERATIONS: Array<OperationOption> = [
 ];
 
 export const ControlPanel = () => {
-	const { operations, tabs } = useAppContext();
+	const { operations, tabs, images } = useAppContext();
 	const { mutateAsync: vipsOperation, isLoading } = useVipsOperation();
 	
 	const { operation, options, setOptionValue } = operations;
@@ -79,8 +80,10 @@ export const ControlPanel = () => {
 
 	const handleVips = async (operation: SharpOperationKey) => {
 		const currentTab = tabs.data[tabs.active];
+		const image = images.data.find((img: ReadImage) => img.name === currentTab.key);
 
 		const vipsInput = {
+			imageID: image.id,
 			operation: operation,
 			data: currentTab.preview?.data ?? currentTab.image.data, 
 			isPreview: true,

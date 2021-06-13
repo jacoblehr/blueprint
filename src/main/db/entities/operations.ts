@@ -32,18 +32,12 @@ class Operations extends Entity<ReadOperation, WriteOperation> {
 			input_data TEXT NOT NULL,
 			output_data TEXT NOT NULL,
 			operation_data TEXT NOT NULL,
-			created_at DATETIME NOT NULL,
-			updated_at DATETIME NOT NULL,
+			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			updated_at DATETIME,
 		
 			FOREIGN KEY (image_id) REFERENCES images(id),
 			FOREIGN KEY (blueprint_id) REFERENCES blueprints(id)
 		);
-		
-		CREATE TRIGGER IF NOT EXISTS operation_created
-		AFTER INSERT ON operations
-		BEGIN
-			UPDATE operations SET created_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-		END;
 		
 		CREATE TRIGGER IF NOT EXISTS operation_updated
 		AFTER UPDATE ON operations

@@ -87,6 +87,7 @@ export type FileMetaData = {
 }
 
 export type FileOperationArgs = {
+	imageID: number;
 	file: string;
 	data?: string;
 }

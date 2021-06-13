@@ -70,7 +70,7 @@ export const registerHandlers = () => {
 	 */
 	ipcMain.handle("vips-operation", async (event: Electron.IpcMainInvokeEvent, args: any) => {
 		const vipsOperationArgs = args as FileOperationArgs;
-		const { file, data } = vipsOperationArgs;
+		const { file, data, imageID } = vipsOperationArgs;
 
 		let input;
 
@@ -85,6 +85,18 @@ export const registerHandlers = () => {
 		const output = await vips.transform({ 
 			input,
 			...args
+		});
+
+
+		await Entities.operations.create({
+			db: db.database,
+			input: {
+				image_id: imageID,
+				blueprint_id: null,
+				input_data: JSON.stringify({ ...input }),
+				output_data: JSON.stringify(output),
+				operation_data: JSON.stringify({ vipsOperationArgs })
+			}
 		});
 
 		return output;
