@@ -1,31 +1,50 @@
 import sqlite from "better-sqlite3";
 import Entities from "./entities";
+export class Database {
+	public database: sqlite.Database;
 
-const init = (): sqlite.Database => {
-	const database = new sqlite(":memory:");
-	return database;
-};
+	constructor() {
+		this.init();
+	}
 
-const close = async(database: sqlite.Database): Promise<void> => {
-	await database.close();
-	return;
-};
+	public init(): sqlite.Database {
+		this.database = new sqlite(":memory:");
+		return this.database;
+	}
 
-const migrate = async (database: sqlite.Database): Promise<void> => {
-	await Entities.images.init(database);
-	await Entities.blueprints.init(database);
-	await Entities.operations.init(database);
+	public async close(): Promise<void> {
+		await this.database.close();
+		return;
+	};
 
-	return; 
-};
+	public async migrate(): Promise<void> {
+		await Entities.images.init(this.database);
+		await Entities.blueprints.init(this.database);
+		await Entities.operations.init(this.database);
+	
+		return; 
+	}
 
-const save = async(database: sqlite.Database, filename: string): Promise<sqlite.BackupMetadata> => {
-	return await database.backup(filename);
-};
+	public async save(filename: string): Promise<sqlite.BackupMetadata> {
+		return await this.database.backup(filename);
+	}
 
-export default {
-	database: init(), 
-	close,
-	migrate,
-	save
-};
+	public async load(filename: string): Promise<void> {
+		const workspace = new sqlite(filename, { fileMustExist: true });
+
+		// @ts-ignore
+		const workspaceBuffer = workspace.serialize() as Buffer;
+		await workspace.close();
+		
+		// @ts-ignore
+		const newWorkspace = new sqlite(workspaceBuffer);
+
+		await this.database.close();
+		this.database = newWorkspace;
+
+		return;
+	}
+
+}
+
+export default new Database();

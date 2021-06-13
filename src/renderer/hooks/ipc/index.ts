@@ -4,7 +4,7 @@ import { FileOperationResult } from "../../../common/types";
 
 export const useOpenImage = (options?: any) => {
 	const openImage = () => {
-		return ipcRenderer.invoke("file-open", {
+		return ipcRenderer.invoke("open-file", {
 			filters: [
 				{ name: "Images", extensions: ["png"] }
 			]
@@ -20,7 +20,7 @@ type SaveImageArgs = {
 
 export const useSaveImage = (options?: any) => {
 	const saveImage = ({ data }: SaveImageArgs) => {
-		return ipcRenderer.invoke("file-save", {
+		return ipcRenderer.invoke("save-file", {
 			data: data,
 			filters: [
 				{ name: "Images", extensions: ["png"] }

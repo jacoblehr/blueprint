@@ -22,6 +22,7 @@ import { Image } from "../../main/db/entities/images";
 
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { Tab } from "../hooks/tabs";
+import { useOpenWorkspace, useSaveWorkspace } from "../hooks/ipc/workspace";
 
 type SideBarProps = {
 	
@@ -31,6 +32,8 @@ export const Sidebar = ({  }: SideBarProps) => {
 	const { images, tabs } = useAppContext();
 	const { mutateAsync: openImage } = useOpenImage();
 	const { mutateAsync: saveImage } = useSaveImage();
+	const { mutateAsync: saveWorkspace } = useSaveWorkspace();
+	const { mutateAsync: openWorkspace } = useOpenWorkspace();
 	
 	const handleOpen = async () => {
 		const result = await openImage();
@@ -43,6 +46,14 @@ export const Sidebar = ({  }: SideBarProps) => {
 				title: pathTokens[pathTokens.length - 1]
 			});
 		}
+	};
+
+	const handleSaveWorkspace = async () => {
+		saveWorkspace({});
+	};
+
+	const handleOpenWorkspace = async () => {
+		openWorkspace({});
 	};
 
 	const handleSave = async () => {
@@ -170,6 +181,8 @@ export const Sidebar = ({  }: SideBarProps) => {
 			<Stack display="flex" flexDirection="column" alignItems="center" justifyContent="center" px="1rem">
 				<ActionButton action={handleOpen} icon={Open} label="Open" />
 				<ActionButton action={handleSave} icon={Save} label="Save" />
+				<ActionButton action={handleOpenWorkspace} icon={Open} label="Open Workspace" />
+				<ActionButton action={handleSaveWorkspace} icon={Save} label="Save Workspace" />
 			</Stack>
 		</Flex>
 	);
@@ -185,7 +198,7 @@ export const ActionButton = ({ action, icon, label }: ActionButtonProps) => {
 	const ActionIcon = ( <Icon fontSize="xs" aria-label={label} as={icon} /> );
 
 	return (
-		<Button 
+		<Button
 			width="100%"
 			onClick={action} 
 			size="sm"

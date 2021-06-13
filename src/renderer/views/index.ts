@@ -8,7 +8,7 @@ type OpenImageResult = {
 
 export const useOpenImage = (options?: UseMutationOptions<unknown, unknown, OpenImageResult, unknown>) => {
 	const openImage = () => {
-		return ipcRenderer.invoke("file-open", {
+		return ipcRenderer.invoke("open-file", {
 			filters: [
 				{ name: "Images", extensions: ["png"] }
 			]

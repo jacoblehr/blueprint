@@ -18,7 +18,7 @@ export const registerHandlers = () => {
 	/**
 	 * File Management
 	 */
-	ipcMain.handle("file-open", async (event: Electron.IpcMainInvokeEvent, args: Electron.OpenDialogOptions) => {
+	ipcMain.handle("open-file", async (event: Electron.IpcMainInvokeEvent, args: Electron.OpenDialogOptions) => {
 		const result = await dialog.showOpenDialog({ ...args });
 		const { canceled, filePaths } = result;
 		if(canceled) {
@@ -39,7 +39,7 @@ export const registerHandlers = () => {
 		};
 	});
 
-	ipcMain.handle("file-save", async (event: Electron.IpcMainEvent, args: any) => {
+	ipcMain.handle("save-file", async (event: Electron.IpcMainEvent, args: any) => {
 		const saveResult: Electron.SaveDialogReturnValue = await dialog.showSaveDialog({ ...args });
 		const { canceled, filePath } = saveResult;
 		if(canceled) {
@@ -100,6 +100,35 @@ export const registerHandlers = () => {
 		});
 
 		return output;
+	});
+
+	/**
+	 * Workspace Operations
+	 */
+	ipcMain.handle("open-workspace", async (event: Electron.IpcMainInvokeEvent) => {
+		const openResult: Electron.OpenDialogReturnValue = await dialog.showOpenDialog({ 
+			filters: [{ name: "Blueprint Workspace", extensions: [".bp"] }]	
+		});
+
+		const { canceled, filePaths } = openResult;
+		if(canceled) {
+			return;
+		}
+
+		return await db.load(filePaths[0]);
+	});
+
+	ipcMain.handle("save-workspace", async (event: Electron.IpcMainInvokeEvent) => {
+		const saveResult: Electron.SaveDialogReturnValue = await dialog.showSaveDialog({ 
+			filters: [{ name: "Blueprint Workspace", extensions: [".bp"] }]	
+		});
+
+		const { canceled, filePath } = saveResult;
+		if(canceled) {
+			return;
+		}
+
+		return await db.save(filePath);
 	});
 
 	/**
