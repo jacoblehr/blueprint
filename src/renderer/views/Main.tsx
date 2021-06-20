@@ -19,7 +19,7 @@ export const Main = ({  }: MainProps) => {
 	
     return (
 		// <Flex flex="1" overflow="auto" width="100%" flexDirection="column" pt="0.5rem">
-			<Flex flex="1" flexDirection="column" width="100%" height="100%" justifyContent="space-between">
+			<Flex flex="1" flexDirection="row" width="100%" height="100%" justifyContent="space-between">
 				<Tabs 
 					borderBottom="1px solid"
 					borderColor="gray.300"
@@ -112,15 +112,15 @@ export const Main = ({  }: MainProps) => {
 						bottomRight: { display: "none" },
 						bottom: { display: "none" },
 						right: { display: "none" },
-						left: { display: "none "},
 					}}
 					defaultSize={{ 
-						width: "100%",
-						height: "200px"
+						width: "300px",
+						height: "100%"
 					}}
-					maxWidth="100%"
-					minHeight="200px"
-					maxHeight="400px"
+					minWidth="300px"
+					maxWidth="600px"
+					minHeight="100%"
+					maxHeight="100%"
 				>
 					<ControlPanel />
 				</Resizable>

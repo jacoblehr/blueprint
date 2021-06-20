@@ -28,7 +28,7 @@ type SetOptionValueArgs = {
 };
 
 export const useOperations = () => {
-	const [operation, setOperation] = React.useState<Maybe<string>>("blur");
+	const [operation, setOperation] = React.useState<Maybe<string>>(null);
 	const [options, setOptions] = React.useState<Options>({
 		blur: getDefaultOptions(BlurOptions),
 		crop: getDefaultOptions(CropOptions),
