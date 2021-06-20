@@ -23,15 +23,9 @@ class Blueprints extends Entity<ReadBlueprint, WriteBlueprint> {
 			id INTEGER PRIMARY KEY,
 			name TEXT NOT NULL,
 			data TEXT NOT NULL,
-			created_at DATETIME NOT NULL,
+			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			updated_at DATETIME NOT NULL
 		);
-		
-		CREATE TRIGGER IF NOT EXISTS blueprint_created
-		AFTER INSERT ON blueprints
-		BEGIN
-			UPDATE blueprints SET created_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
-		END;
 		
 		CREATE TRIGGER IF NOT EXISTS blueprint_updated
 		AFTER UPDATE ON blueprints

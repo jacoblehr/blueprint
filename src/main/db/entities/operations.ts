@@ -35,8 +35,8 @@ class Operations extends Entity<ReadOperation, WriteOperation> {
 			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			updated_at DATETIME,
 		
-			FOREIGN KEY (image_id) REFERENCES images(id),
-			FOREIGN KEY (blueprint_id) REFERENCES blueprints(id)
+			FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE,
+			FOREIGN KEY (blueprint_id) REFERENCES blueprints(id) ON DELETE CASCADE
 		);
 		
 		CREATE TRIGGER IF NOT EXISTS operation_updated
