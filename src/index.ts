@@ -7,7 +7,6 @@ import db from "./main/db";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
 import { protocol } from "electron";
-import sqlite from "better-sqlite3";
 
 // Allows loading local images
 app.whenReady().then(() => {
@@ -56,12 +55,12 @@ const createWindow = (): void => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async function() {
 	registerHandlers();
-	await db.migrate(db.database);
+	await db.migrate();
 	createWindow();
 });
 
 process.on('exit', async () => {
-	if(db) { await db.close(db.database) }
+	if(db) { await db.close() }
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
