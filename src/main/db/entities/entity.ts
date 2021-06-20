@@ -110,10 +110,7 @@ export abstract class Entity<ReadSchema, WriteSchema> {
 			}).join("\n") : ''}
 		`);
 
-		console.warn(readStatement);
-
 		const result = await readStatement.all(where ?? {});
-		console.warn(result);
 
 		return result;
 	}
